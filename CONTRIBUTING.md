@@ -13,6 +13,8 @@ Before contributing, please read:
 - [GOVERNANCE.md](GOVERNANCE.md)
 - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 - [SECURITY.md](SECURITY.md)
+- [COMMERCIAL-LICENSING.md](COMMERCIAL-LICENSING.md)
+- [SUPPORT.md](SUPPORT.md)
 
 ## 🚀 How Can You Contribute?
 

@@ -3,9 +3,15 @@ contact_links:
   - name: Security report
     url: https://github.com/markkuang9-PRG/My-Daily-Closet/security
     about: Use a private path for security issues when available. Do not post exploit details publicly.
+  - name: Commercial licensing
+    url: https://github.com/markkuang9-PRG/My-Daily-Closet/blob/main/COMMERCIAL-LICENSING.md
+    about: Read this before asking for OEM, private licensing, or commercial terms.
   - name: Contribution terms
     url: https://github.com/markkuang9-PRG/My-Daily-Closet/blob/main/CLA.md
     about: Read the CLA before submitting code or assets.
   - name: Trademark terms
     url: https://github.com/markkuang9-PRG/My-Daily-Closet/blob/main/TRADEMARKS.md
     about: Review brand and naming restrictions before commercial or public use.
+  - name: Support guide
+    url: https://github.com/markkuang9-PRG/My-Daily-Closet/blob/main/SUPPORT.md
+    about: Find the right support route for bugs, features, security, or private matters.

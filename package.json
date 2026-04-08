@@ -1,9 +1,17 @@
 {
-  "name": "react-example",
+  "name": "my-daily-closet",
   "private": true,
   "version": "0.0.0",
   "license": "AGPL-3.0-only",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markkuang9-PRG/My-Daily-Closet.git"
+  },
+  "homepage": "https://github.com/markkuang9-PRG/My-Daily-Closet",
+  "bugs": {
+    "url": "https://github.com/markkuang9-PRG/My-Daily-Closet/issues"
+  },
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",

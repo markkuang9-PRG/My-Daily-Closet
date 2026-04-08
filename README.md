@@ -53,6 +53,8 @@ We welcome contributions to:
 - Project governance, maintainer authority, and contribution boundaries are described in [GOVERNANCE.md](GOVERNANCE.md).
 - Community behavior expectations are described in [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 - Private security reporting guidance is described in [SECURITY.md](SECURITY.md).
+- Commercial licensing and private business inquiries are described in [COMMERCIAL-LICENSING.md](COMMERCIAL-LICENSING.md).
+- Support paths are described in [SUPPORT.md](SUPPORT.md).
 
 For commercial licensing, OEM use, private deployments that need terms outside AGPL, or other business inquiries, contact the project owner before use.
 
@@ -60,7 +62,7 @@ For commercial licensing, OEM use, private deployments that need terms outside A
 
 \`\`\`bash
 # Clone the repository
-git clone https://github.com/yourusername/my-daily-closet.git
+git clone https://github.com/markkuang9-PRG/My-Daily-Closet.git
 
 # Install dependencies
 npm install
