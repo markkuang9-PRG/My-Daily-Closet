@@ -10,6 +10,9 @@ Before contributing, please read:
 - [NOTICE](NOTICE)
 - [CLA.md](CLA.md)
 - [TRADEMARKS.md](TRADEMARKS.md)
+- [GOVERNANCE.md](GOVERNANCE.md)
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- [SECURITY.md](SECURITY.md)
 
 ## 🚀 How Can You Contribute?
 
