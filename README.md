@@ -50,6 +50,7 @@ If you are evaluating whether to contribute, start here:
 
 - [ROADMAP.md](ROADMAP.md) for current priorities
 - [GOOD_FIRST_TASKS.md](GOOD_FIRST_TASKS.md) for concrete first contributions
+- [ISSUE_BACKLOG.md](ISSUE_BACKLOG.md) for ready-to-post community issue drafts
 - [CONTRIBUTING.md](CONTRIBUTING.md) for contribution process and legal terms
 
 The project is currently most receptive to focused improvements around MVP stabilization, workflow cleanup, Firebase reliability, prompt quality, and contributor-facing documentation.
