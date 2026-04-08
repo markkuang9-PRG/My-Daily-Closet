@@ -4,6 +4,12 @@ First off, thank you for considering contributing to **My Daily Closet**! It's p
 
 We welcome contributions from everyone—whether you're a seasoned developer, a designer, or just someone who wants to fix a typo in the documentation.
 
+Before contributing, please read:
+
+- [LICENSE](LICENSE)
+- [CLA.md](CLA.md)
+- [TRADEMARKS.md](TRADEMARKS.md)
+
 ## 🚀 How Can You Contribute?
 
 ### 1. Report Bugs
@@ -50,9 +56,18 @@ To get the project running on your local machine:
 2. Make your changes and commit them with clear, descriptive messages.
 3. Push your branch to your fork: \`git push origin feature/your-feature-name\`
 4. Open a Pull Request (PR) against our \`main\` branch.
-5. A maintainer will review your PR, suggest changes if needed, and merge it!
+5. Confirm the CLA checklist in the PR template.
+6. A maintainer will review your PR, suggest changes if needed, and merge it!
 
 ## ⚖️ License Note
-By contributing to My Daily Closet, you agree that your contributions will be licensed under its **AGPL-3.0 License**.
+This repository is publicly distributed under **AGPL-3.0-only**.
+
+By contributing to My Daily Closet, you agree to the separate terms in [CLA.md](CLA.md). In short:
+
+- your pull request can be merged into the AGPL repository;
+- you keep ownership of your contribution;
+- you grant Piedra Roja Group, Inc. the right to relicense and commercialize accepted contributions, including as part of a future acquisition, asset sale, or other transaction.
+
+If your employer, client, or school may claim rights in your contribution, secure approval before submitting.
 
 Thank you for helping us build the future of circular fashion! 🌍♻️

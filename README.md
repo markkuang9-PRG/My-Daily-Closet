@@ -44,7 +44,13 @@ We welcome contributions to:
 - Integrate with local second-hand marketplaces worldwide via APIs.
 - Create more personalized and diverse AI styling prompts.
 
-*(Note: Commercial use of this software requires adherence to the AGPL v3 license or a commercial agreement with the original authors. Please contact us for commercial licensing inquiries.)*
+## ⚖️ Licensing
+
+- The source code in this repository is licensed under **AGPL-3.0-only**. See [LICENSE](LICENSE).
+- External contributions are accepted under the terms in [CLA.md](CLA.md). This allows the project to remain open source while preserving the ability to offer commercial licenses, dual-license future versions, or complete a broader business transaction involving the project.
+- Project names, logos, and brand assets are not automatically licensed with the source code. See [TRADEMARKS.md](TRADEMARKS.md).
+
+For commercial licensing, OEM use, private deployments that need terms outside AGPL, or other business inquiries, contact the project owner before use.
 
 ## 🚀 Getting Started
 
@@ -56,11 +62,11 @@ git clone https://github.com/yourusername/my-daily-closet.git
 npm install
 
 # Set up your .env file with your Gemini API Key
-# GEMINI_API_KEY=your_key_here
+# VITE_GEMINI_API_KEY=your_key_here
 
 # Run the development server
 npm run dev
 \`\`\`
 
 ---
-*Built with ❤️ by the Open Source Fashion-Tech Community & Piedra Roja Group, Inc.*
+Copyright (c) 2026 Piedra Roja Group, Inc. and contributors.
