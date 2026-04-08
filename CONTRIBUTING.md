@@ -7,6 +7,7 @@ We welcome contributions from everyone—whether you're a seasoned developer, a 
 Before contributing, please read:
 
 - [LICENSE](LICENSE)
+- [NOTICE](NOTICE)
 - [CLA.md](CLA.md)
 - [TRADEMARKS.md](TRADEMARKS.md)
 

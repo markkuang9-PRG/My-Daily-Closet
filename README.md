@@ -47,6 +47,7 @@ We welcome contributions to:
 ## ⚖️ Licensing
 
 - The source code in this repository is licensed under **AGPL-3.0-only**. See [LICENSE](LICENSE).
+- Additional attribution and repository notices are collected in [NOTICE](NOTICE).
 - External contributions are accepted under the terms in [CLA.md](CLA.md). This allows the project to remain open source while preserving the ability to offer commercial licenses, dual-license future versions, or complete a broader business transaction involving the project.
 - Project names, logos, and brand assets are not automatically licensed with the source code. See [TRADEMARKS.md](TRADEMARKS.md).
 
