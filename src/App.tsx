@@ -7,12 +7,11 @@ import { addDoc, collection, deleteDoc, doc, updateDoc } from 'firebase/firestor
 import { AppHeader } from './components/AppHeader';
 import { AuthScreen } from './components/AuthScreen';
 import { BottomNav } from './components/BottomNav';
+import { useClosetActions } from './hooks/useClosetActions';
 import { useClothes } from './hooks/useClothes';
 import { useWeather } from './hooks/useWeather';
-import { requireAiClient } from './lib/gemini';
 import { logAppError } from './lib/logger';
-import { compressImage, validateUpload } from './lib/upload';
-import type { AppTab, ClothingItem, GeneratedCopy, OutfitRecommendation } from './types';
+import type { AppTab } from './types';
 import { ClosetView } from './views/ClosetView';
 import { MarketView } from './views/MarketView';
 import { StylistView } from './views/StylistView';
@@ -21,13 +20,6 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [activeTab, setActiveTab] = useState<AppTab>('closet');
-  const [isUploading, setIsUploading] = useState(false);
-  const [isStyling, setIsStyling] = useState(false);
-  const [outfitRecommendation, setOutfitRecommendation] = useState<OutfitRecommendation | null>(null);
-  const [sellingItem, setSellingItem] = useState<ClothingItem | null>(null);
-  const [generatedCopy, setGeneratedCopy] = useState<GeneratedCopy | null>(null);
-  const [isGeneratingCopy, setIsGeneratingCopy] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const currentPath = `/users/${user?.uid ?? 'anonymous'}/clothes`;
 
@@ -42,6 +34,27 @@ export default function App() {
 
   const weather = useWeather(user?.uid);
   const clothes = useClothes(user, isAuthReady);
+  const {
+    clearSellingItem,
+    confirmOutfit,
+    copyGeneratedCopy,
+    deleteItem,
+    fileInputRef,
+    generateOutfit,
+    generateSalesCopy,
+    generatedCopy,
+    handleFileUpload,
+    isGeneratingCopy,
+    isStyling,
+    isUploading,
+    outfitRecommendation,
+    sellingItem,
+  } = useClosetActions({
+    clothes,
+    currentPath,
+    user,
+    weather,
+  });
 
   const handleLogin = async () => {
     if (isLoggingIn) return;
@@ -60,205 +73,6 @@ export default function App() {
       }
     } finally {
       setIsLoggingIn(false);
-    }
-  };
-
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file || !user) return;
-
-    setIsUploading(true);
-
-    try {
-      validateUpload(file);
-
-      // 1. Compress image
-      const base64String = await compressImage(file);
-      if (base64String.length > 1_000_000) {
-        throw new Error('Compressed image is still too large. Please use a smaller image.');
-      }
-      const base64Data = base64String.split(',')[1];
-
-      // 2. Call Gemini to analyze the clothing
-      const response = await requireAiClient().models.generateContent({
-        model: 'gemini-3-flash-preview',
-        contents: [
-          { inlineData: { data: base64Data, mimeType: 'image/jpeg' } },
-          "Analyze this clothing item. Return ONLY a valid JSON object with these exact keys: 'category' (Top, Bottom, Shoes, Outerwear, Dress, Accessory), 'color', 'style' (Casual, Formal, Sport, Vintage, etc.), 'season' (Spring, Summer, Autumn, Winter, All). Do not include any markdown formatting like ```json."
-        ]
-      });
-
-      // 3. Parse result
-      let aiResult;
-      try {
-        const cleanJsonStr = response.text?.replace(/```json/g, '').replace(/```/g, '').trim() || '{}';
-        aiResult = JSON.parse(cleanJsonStr);
-      } catch (e) {
-        logAppError(e, {
-          operation: 'parse_clothing_analysis',
-          path: currentPath,
-          userId: user.uid,
-        });
-        aiResult = { category: 'Unknown', color: 'Unknown', style: 'Unknown', season: 'Unknown' };
-      }
-
-      // 4. Save to Firestore
-      await addDoc(collection(db, 'users', user.uid, 'clothes'), {
-        imageUrl: base64String,
-        category: aiResult.category || 'Unknown',
-        color: aiResult.color || 'Unknown',
-        style: aiResult.style || 'Unknown',
-        season: aiResult.season || 'Unknown',
-        lastWorn: Date.now(),
-        createdAt: Date.now()
-      });
-
-    } catch (error) {
-      logAppError(error, {
-        operation: 'upload_clothing_item',
-        path: currentPath,
-        userId: user.uid,
-        extra: {
-          fileName: file.name,
-          fileType: file.type,
-          fileSize: file.size,
-        },
-      });
-      alert(error instanceof Error ? error.message : "Upload or analysis failed, please try again.");
-    } finally {
-      setIsUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    }
-  };
-
-  const generateOutfit = async () => {
-    if (clothes.length === 0) {
-      alert("Your closet is empty! Please upload some clothes first.");
-      return;
-    }
-    setIsStyling(true);
-    try {
-      // Create a lightweight version of clothes for the prompt to save tokens
-      const wardrobeContext = clothes.map(c => ({ id: c.id, category: c.category, color: c.color, style: c.style, season: c.season }));
-      
-      const prompt = `
-        You are an AI fashion stylist.
-        User Wardrobe: ${JSON.stringify(wardrobeContext)}
-        Weather: ${weather}
-        Rules: Create a stylish outfit using the available items. Try to include a Top and a Bottom, or a Dress. Add Outerwear if suitable for the weather.
-        Return ONLY a valid JSON object with:
-        - 'itemIds': an array of the 'id' strings of the selected items.
-        - 'message': A warm, butler-style message explaining why this outfit works for the current weather (e.g., "Today is ${weather}, this dark cargo pants will keep you warm...").
-        Do not include markdown formatting.
-      `;
-      const response = await requireAiClient().models.generateContent({
-        model: 'gemini-3-flash-preview',
-        contents: prompt
-      });
-      const cleanJsonStr = response.text?.replace(/```json/g, '').replace(/```/g, '').trim() || '{}';
-      const result = JSON.parse(cleanJsonStr);
-      setOutfitRecommendation(result);
-    } catch (error) {
-      logAppError(error, {
-        operation: 'generate_outfit',
-        path: currentPath,
-        userId: user?.uid ?? null,
-        extra: {
-          clothesCount: clothes.length,
-          weather,
-        },
-      });
-      alert(error instanceof Error ? error.message : "Failed to generate outfit, please try again.");
-    } finally {
-      setIsStyling(false);
-    }
-  };
-
-  const confirmOutfit = async () => {
-    if (!user || !outfitRecommendation) return;
-    
-    try {
-      const now = Date.now();
-      // Update lastWorn for all selected items
-      await Promise.all(outfitRecommendation.itemIds.map(id => 
-        updateDoc(doc(db, 'users', user.uid, 'clothes', id), { lastWorn: now })
-      ));
-      alert("Success! Updated the wear history for these items.");
-      setOutfitRecommendation(null);
-      setActiveTab('closet');
-    } catch (error) {
-      logAppError(error, {
-        operation: 'confirm_outfit',
-        path: currentPath,
-        userId: user.uid,
-        extra: {
-          itemIds: outfitRecommendation.itemIds,
-        },
-      });
-      alert("Failed to update wear history, please try again.");
-    }
-  };
-
-  const generateSalesCopy = async (item: ClothingItem) => {
-    setSellingItem(item);
-    setIsGeneratingCopy(true);
-    setGeneratedCopy(null);
-    try {
-      const prompt = `
-        You are an expert second-hand clothing seller on Poshmark and eBay.
-        Write an attractive sales listing for this item:
-        - Category: ${item.category}
-        - Color: ${item.color}
-        - Style: ${item.style}
-        - Season: ${item.season}
-        
-        Return ONLY a valid JSON object with:
-        - 'title': A catchy, click-baity title (e.g., "Like New! Versatile Beige Casual Jacket...").
-        - 'description': A detailed, persuasive description including styling tips and condition (assume gently used). Add relevant hashtags at the end.
-        Do not include markdown formatting like \`\`\`json.
-      `;
-      const response = await requireAiClient().models.generateContent({
-        model: 'gemini-3-flash-preview',
-        contents: prompt
-      });
-      const cleanJsonStr = response.text?.replace(/```json/g, '').replace(/```/g, '').trim() || '{}';
-      const result = JSON.parse(cleanJsonStr);
-      setGeneratedCopy(result);
-    } catch (error) {
-      logAppError(error, {
-        operation: 'generate_sales_copy',
-        path: currentPath,
-        userId: user?.uid ?? null,
-        extra: {
-          itemId: item.id,
-        },
-      });
-      alert(error instanceof Error ? error.message : "Failed to generate copy, please try again.");
-      setSellingItem(null);
-    } finally {
-      setIsGeneratingCopy(false);
-    }
-  };
-
-  const deleteItem = async (id: string) => {
-    if (!user) return;
-    if (window.confirm("Are you sure you want to delete this item?")) {
-      try {
-        await deleteDoc(doc(db, 'users', user.uid, 'clothes', id));
-        if (sellingItem?.id === id) {
-          setSellingItem(null);
-          setGeneratedCopy(null);
-        }
-      } catch (error) {
-        logAppError(error, {
-          operation: 'delete_clothing_item',
-          path: currentPath,
-          userId: user.uid,
-          extra: {
-            itemId: id,
-          },
-        });
-      }
     }
   };
 
@@ -304,7 +118,12 @@ export default function App() {
                 isStyling={isStyling}
                 outfitRecommendation={outfitRecommendation}
                 onGenerateOutfit={generateOutfit}
-                onConfirmOutfit={confirmOutfit}
+                onConfirmOutfit={async () => {
+                  const didConfirm = await confirmOutfit();
+                  if (didConfirm) {
+                    setActiveTab('closet');
+                  }
+                }}
               />
             )}
 
@@ -315,15 +134,8 @@ export default function App() {
                 generatedCopy={generatedCopy}
                 isGeneratingCopy={isGeneratingCopy}
                 onGenerateSalesCopy={generateSalesCopy}
-                onClearSellingItem={() => {
-                  setSellingItem(null);
-                  setGeneratedCopy(null);
-                }}
-                onCopyGeneratedCopy={(itemId, copy) => {
-                  navigator.clipboard.writeText(`${copy.title}\n\n${copy.description}`);
-                  alert("Copy copied to clipboard! You can paste it directly to Poshmark or eBay.");
-                  deleteItem(itemId);
-                }}
+                onClearSellingItem={clearSellingItem}
+                onCopyGeneratedCopy={copyGeneratedCopy}
               />
             )}
           </AnimatePresence>
