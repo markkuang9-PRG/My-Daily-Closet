@@ -13,11 +13,11 @@
     "url": "https://github.com/markkuang9-PRG/My-Daily-Closet/issues"
   },
   "scripts": {
-    "dev": "vite --port=3000 --host=0.0.0.0",
-    "build": "vite build",
-    "preview": "vite preview",
+    "dev": "node node_modules/vite/bin/vite.js --port=3000 --host=0.0.0.0",
+    "build": "node node_modules/vite/bin/vite.js build",
+    "preview": "node node_modules/vite/bin/vite.js preview",
     "clean": "rm -rf dist",
-    "lint": "tsc --noEmit"
+    "lint": "node node_modules/typescript/bin/tsc --noEmit"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",
