@@ -1,0 +1,22 @@
+export type AppTab = 'closet' | 'stylist' | 'market';
+
+export interface ClothingItem {
+  id: string;
+  imageUrl: string;
+  category: string;
+  color: string;
+  style: string;
+  season: string;
+  lastWorn: number;
+  createdAt: number;
+}
+
+export interface OutfitRecommendation {
+  message: string;
+  itemIds: string[];
+}
+
+export interface GeneratedCopy {
+  title: string;
+  description: string;
+}

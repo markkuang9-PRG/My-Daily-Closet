@@ -1,0 +1,73 @@
+import type { ChangeEvent, RefObject } from 'react';
+import { Camera, Loader2, Shirt } from 'lucide-react';
+import { motion } from 'motion/react';
+import { ClothingCard } from '../components/ClothingCard';
+import type { ClothingItem } from '../types';
+
+type ClosetViewProps = {
+  clothes: ClothingItem[];
+  fileInputRef: RefObject<HTMLInputElement | null>;
+  isUploading: boolean;
+  onFileUpload: (event: ChangeEvent<HTMLInputElement>) => void;
+  onDeleteItem: (id: string) => void;
+};
+
+export const ClosetView = ({
+  clothes,
+  fileInputRef,
+  isUploading,
+  onFileUpload,
+  onDeleteItem,
+}: ClosetViewProps) => {
+  return (
+    <motion.div
+      key="closet"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      className="space-y-4"
+    >
+      <button
+        onClick={() => fileInputRef.current?.click()}
+        disabled={isUploading}
+        className="w-full bg-black text-white rounded-2xl p-4 flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 shadow-sm"
+      >
+        {isUploading ? (
+          <>
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span>AI analyzing & adding...</span>
+          </>
+        ) : (
+          <>
+            <Camera className="w-5 h-5" />
+            <span className="font-medium">Take Photo / Upload Item</span>
+          </>
+        )}
+      </button>
+      <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={onFileUpload} />
+
+      {clothes.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 text-gray-400 text-center">
+          <Shirt className="w-12 h-12 mb-3 opacity-20" />
+          <p>Your closet is empty</p>
+          <p className="text-sm mt-1">Click the button above to add your first item!</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-4 mt-6">
+          {clothes.map((item) => {
+            const daysSinceWorn = Math.floor((Date.now() - item.lastWorn) / (1000 * 60 * 60 * 24));
+            return (
+              <div key={item.id}>
+                <ClothingCard
+                  item={item}
+                  idleLabel={daysSinceWorn > 90 ? `Idle for ${daysSinceWorn} days` : null}
+                  onDelete={onDeleteItem}
+                />
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </motion.div>
+  );
+};
