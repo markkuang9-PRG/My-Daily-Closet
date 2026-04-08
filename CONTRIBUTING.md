@@ -15,6 +15,8 @@ Before contributing, please read:
 - [SECURITY.md](SECURITY.md)
 - [COMMERCIAL-LICENSING.md](COMMERCIAL-LICENSING.md)
 - [SUPPORT.md](SUPPORT.md)
+- [ROADMAP.md](ROADMAP.md)
+- [GOOD_FIRST_TASKS.md](GOOD_FIRST_TASKS.md)
 
 ## 🚀 How Can You Contribute?
 
@@ -31,6 +33,7 @@ Have a great idea for a new feature? We'd love to hear it! Open an issue and use
 We have a list of open issues. Look for issues labeled **`good first issue`** or **`help wanted`**. 
 - **Frontend:** React, Tailwind CSS, Framer Motion.
 - **Backend/AI:** Firebase, Google Gemini API.
+- **Suggested starting point:** choose something from [GOOD_FIRST_TASKS.md](GOOD_FIRST_TASKS.md) and keep the first PR narrow.
 
 ## 🛠️ Local Development Setup
 

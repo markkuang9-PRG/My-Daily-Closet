@@ -44,6 +44,16 @@ We welcome contributions to:
 - Integrate with local second-hand marketplaces worldwide via APIs.
 - Create more personalized and diverse AI styling prompts.
 
+## 🧭 Where Contributors Should Start
+
+If you are evaluating whether to contribute, start here:
+
+- [ROADMAP.md](ROADMAP.md) for current priorities
+- [GOOD_FIRST_TASKS.md](GOOD_FIRST_TASKS.md) for concrete first contributions
+- [CONTRIBUTING.md](CONTRIBUTING.md) for contribution process and legal terms
+
+The project is currently most receptive to focused improvements around MVP stabilization, workflow cleanup, Firebase reliability, prompt quality, and contributor-facing documentation.
+
 ## ⚖️ Licensing
 
 - The source code in this repository is licensed under **AGPL-3.0-only**. See [LICENSE](LICENSE).
