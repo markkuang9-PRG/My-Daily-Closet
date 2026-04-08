@@ -5,9 +5,11 @@ import { GoogleGenAI } from '@google/genai';
 import { auth, db, googleProvider } from './firebase';
 import { signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { logAppError } from './lib/logger';
 
 // Initialize Gemini API
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const geminiApiKey = import.meta.env.VITE_GEMINI_API_KEY;
+const ai = geminiApiKey ? new GoogleGenAI({ apiKey: geminiApiKey }) : null;
 
 // Types
 interface ClothingItem {
@@ -51,6 +53,17 @@ const compressImage = (file: File): Promise<string> => {
   });
 };
 
+const validateUpload = (file: File) => {
+  if (!file.type.startsWith('image/')) {
+    throw new Error('Only image uploads are supported.');
+  }
+
+  const maxOriginalFileSize = 10 * 1024 * 1024;
+  if (file.size > maxOriginalFileSize) {
+    throw new Error('Please upload an image smaller than 10MB.');
+  }
+};
+
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthReady, setIsAuthReady] = useState(false);
@@ -71,6 +84,16 @@ export default function App() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+  const currentPath = `/users/${user?.uid ?? 'anonymous'}/clothes`;
+
+  const requireAiClient = () => {
+    if (!ai) {
+      throw new Error('Gemini AI is not configured. Set VITE_GEMINI_API_KEY before running the app.');
+    }
+
+    return ai;
+  };
 
   // Auth Listener
   useEffect(() => {
@@ -97,7 +120,11 @@ export default function App() {
           if (code >= 1 && code <= 3) condition = "Cloudy";
           setWeather(`${data.current_weather.temperature}°C, ${condition}`);
         } catch (e) {
-          console.error("Weather fetch error", e);
+          logAppError(e, {
+            operation: 'fetch_weather',
+            path: window.location.pathname,
+            userId: user?.uid ?? null,
+          });
           setWeather("20°C, Clear (Default)");
         }
       }, () => {
@@ -120,7 +147,11 @@ export default function App() {
       });
       setClothes(items);
     }, (error) => {
-      console.error("Firestore sync error", error);
+      logAppError(error, {
+        operation: 'firestore_sync',
+        path: currentPath,
+        userId: user.uid,
+      });
     });
     
     return () => unsubscribe();
@@ -132,7 +163,10 @@ export default function App() {
     try {
       await signInWithPopup(auth, googleProvider);
     } catch (error: any) {
-      console.error("Login failed", error);
+      logAppError(error, {
+        operation: 'auth_login',
+        path: '/auth/google',
+      });
       if (error.code === 'auth/popup-blocked') {
         alert("Login popup was blocked by the browser. Please allow popups or open the app in a new tab.");
       } else if (error.code !== 'auth/cancelled-popup-request' && error.code !== 'auth/popup-closed-by-user') {
@@ -150,12 +184,17 @@ export default function App() {
     setIsUploading(true);
 
     try {
+      validateUpload(file);
+
       // 1. Compress image
       const base64String = await compressImage(file);
+      if (base64String.length > 1_000_000) {
+        throw new Error('Compressed image is still too large. Please use a smaller image.');
+      }
       const base64Data = base64String.split(',')[1];
 
       // 2. Call Gemini to analyze the clothing
-      const response = await ai.models.generateContent({
+      const response = await requireAiClient().models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: [
           { inlineData: { data: base64Data, mimeType: 'image/jpeg' } },
@@ -169,7 +208,11 @@ export default function App() {
         const cleanJsonStr = response.text?.replace(/```json/g, '').replace(/```/g, '').trim() || '{}';
         aiResult = JSON.parse(cleanJsonStr);
       } catch (e) {
-        console.error("Failed to parse AI response", e);
+        logAppError(e, {
+          operation: 'parse_clothing_analysis',
+          path: currentPath,
+          userId: user.uid,
+        });
         aiResult = { category: 'Unknown', color: 'Unknown', style: 'Unknown', season: 'Unknown' };
       }
 
@@ -185,8 +228,17 @@ export default function App() {
       });
 
     } catch (error) {
-      console.error("Upload error:", error);
-      alert("Upload or analysis failed, please try again.");
+      logAppError(error, {
+        operation: 'upload_clothing_item',
+        path: currentPath,
+        userId: user.uid,
+        extra: {
+          fileName: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+        },
+      });
+      alert(error instanceof Error ? error.message : "Upload or analysis failed, please try again.");
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -213,7 +265,7 @@ export default function App() {
         - 'message': A warm, butler-style message explaining why this outfit works for the current weather (e.g., "Today is ${weather}, this dark cargo pants will keep you warm...").
         Do not include markdown formatting.
       `;
-      const response = await ai.models.generateContent({
+      const response = await requireAiClient().models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: prompt
       });
@@ -221,8 +273,16 @@ export default function App() {
       const result = JSON.parse(cleanJsonStr);
       setOutfitRecommendation(result);
     } catch (error) {
-      console.error(error);
-      alert("Failed to generate outfit, please try again.");
+      logAppError(error, {
+        operation: 'generate_outfit',
+        path: currentPath,
+        userId: user?.uid ?? null,
+        extra: {
+          clothesCount: clothes.length,
+          weather,
+        },
+      });
+      alert(error instanceof Error ? error.message : "Failed to generate outfit, please try again.");
     } finally {
       setIsStyling(false);
     }
@@ -241,7 +301,14 @@ export default function App() {
       setOutfitRecommendation(null);
       setActiveTab('closet');
     } catch (error) {
-      console.error("Failed to update outfit", error);
+      logAppError(error, {
+        operation: 'confirm_outfit',
+        path: currentPath,
+        userId: user.uid,
+        extra: {
+          itemIds: outfitRecommendation.itemIds,
+        },
+      });
       alert("Failed to update wear history, please try again.");
     }
   };
@@ -264,7 +331,7 @@ export default function App() {
         - 'description': A detailed, persuasive description including styling tips and condition (assume gently used). Add relevant hashtags at the end.
         Do not include markdown formatting like \`\`\`json.
       `;
-      const response = await ai.models.generateContent({
+      const response = await requireAiClient().models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: prompt
       });
@@ -272,8 +339,15 @@ export default function App() {
       const result = JSON.parse(cleanJsonStr);
       setGeneratedCopy(result);
     } catch (error) {
-      console.error(error);
-      alert("Failed to generate copy, please try again.");
+      logAppError(error, {
+        operation: 'generate_sales_copy',
+        path: currentPath,
+        userId: user?.uid ?? null,
+        extra: {
+          itemId: item.id,
+        },
+      });
+      alert(error instanceof Error ? error.message : "Failed to generate copy, please try again.");
       setSellingItem(null);
     } finally {
       setIsGeneratingCopy(false);
@@ -290,7 +364,14 @@ export default function App() {
           setGeneratedCopy(null);
         }
       } catch (error) {
-        console.error("Delete failed", error);
+        logAppError(error, {
+          operation: 'delete_clothing_item',
+          path: currentPath,
+          userId: user.uid,
+          extra: {
+            itemId: id,
+          },
+        });
       }
     }
   };

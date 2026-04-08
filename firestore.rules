@@ -1,20 +1,88 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
     function isAuthenticated() {
       return request.auth != null;
     }
-    
+
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
+    function hasOnlyClothingFields(data) {
+      return data.keys().hasOnly([
+        'imageUrl',
+        'category',
+        'color',
+        'style',
+        'season',
+        'lastWorn',
+        'createdAt'
+      ]);
+    }
+
+    function hasRequiredClothingFields(data) {
+      return data.keys().hasAll([
+        'imageUrl',
+        'category',
+        'color',
+        'style',
+        'season',
+        'lastWorn',
+        'createdAt'
+      ]);
+    }
+
+    function hasValidClothingTypes(data) {
+      return data.imageUrl is string
+        && data.category is string
+        && data.color is string
+        && data.style is string
+        && data.season is string
+        && data.lastWorn is int
+        && data.createdAt is int;
+    }
+
+    function hasValidClothingLengths(data) {
+      return data.imageUrl.size() <= 1000000
+        && data.category.size() > 0
+        && data.category.size() <= 40
+        && data.color.size() > 0
+        && data.color.size() <= 40
+        && data.style.size() > 0
+        && data.style.size() <= 60
+        && data.season.size() > 0
+        && data.season.size() <= 20;
+    }
+
+    function hasValidTimestamps(data) {
+      return data.createdAt > 0
+        && data.lastWorn > 0
+        && data.lastWorn >= data.createdAt;
+    }
+
+    function isValidClothingDocument(data) {
+      return hasOnlyClothingFields(data)
+        && hasRequiredClothingFields(data)
+        && hasValidClothingTypes(data)
+        && hasValidClothingLengths(data)
+        && hasValidTimestamps(data);
+    }
+
     match /users/{userId} {
       allow read, write: if isOwner(userId);
-      
+
       match /clothes/{clothingId} {
-        allow read, write: if isOwner(userId);
+        allow read: if isOwner(userId);
+
+        allow create: if isOwner(userId)
+          && isValidClothingDocument(request.resource.data);
+
+        allow update: if isOwner(userId)
+          && isValidClothingDocument(request.resource.data)
+          && request.resource.data.createdAt == resource.data.createdAt;
+
+        allow delete: if isOwner(userId);
       }
     }
   }
