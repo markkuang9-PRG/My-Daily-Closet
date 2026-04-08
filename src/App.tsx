@@ -61,7 +61,7 @@ export default function App() {
   // Stylist State
   const [isStyling, setIsStyling] = useState(false);
   const [outfitRecommendation, setOutfitRecommendation] = useState<{ message: string; itemIds: string[] } | null>(null);
-  const [weather, setWeather] = useState<string>("获取天气中...");
+  const [weather, setWeather] = useState<string>("Fetching weather...");
   
   // Market State
   const [sellingItem, setSellingItem] = useState<ClothingItem | null>(null);
@@ -91,20 +91,20 @@ export default function App() {
           const data = await res.json();
           // Map WMO weather codes to simple strings
           const code = data.current_weather.weathercode;
-          let condition = "晴朗";
-          if (code >= 51 && code <= 67) condition = "下雨";
-          if (code >= 71 && code <= 77) condition = "下雪";
-          if (code >= 1 && code <= 3) condition = "多云";
+          let condition = "Clear";
+          if (code >= 51 && code <= 67) condition = "Rain";
+          if (code >= 71 && code <= 77) condition = "Snow";
+          if (code >= 1 && code <= 3) condition = "Cloudy";
           setWeather(`${data.current_weather.temperature}°C, ${condition}`);
         } catch (e) {
           console.error("Weather fetch error", e);
-          setWeather("20°C, 晴朗 (默认)");
+          setWeather("20°C, Clear (Default)");
         }
       }, () => {
-        setWeather("20°C, 晴朗 (默认)");
+        setWeather("20°C, Clear (Default)");
       });
     } else {
-      setWeather("20°C, 晴朗 (默认)");
+      setWeather("20°C, Clear (Default)");
     }
   }, []);
 
@@ -134,9 +134,9 @@ export default function App() {
     } catch (error: any) {
       console.error("Login failed", error);
       if (error.code === 'auth/popup-blocked') {
-        alert("登录弹窗被浏览器拦截。请点击浏览器地址栏的拦截提示允许弹窗，或者点击预览窗口右上角的图标【在新标签页中打开】应用。");
+        alert("Login popup was blocked by the browser. Please allow popups or open the app in a new tab.");
       } else if (error.code !== 'auth/cancelled-popup-request' && error.code !== 'auth/popup-closed-by-user') {
-        alert("登录失败，请重试。");
+        alert("Login failed, please try again.");
       }
     } finally {
       setIsLoggingIn(false);
@@ -186,7 +186,7 @@ export default function App() {
 
     } catch (error) {
       console.error("Upload error:", error);
-      alert("上传或分析失败，请重试。");
+      alert("Upload or analysis failed, please try again.");
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -195,7 +195,7 @@ export default function App() {
 
   const generateOutfit = async () => {
     if (clothes.length === 0) {
-      alert("您的衣橱还是空的！请先上传一些衣服。");
+      alert("Your closet is empty! Please upload some clothes first.");
       return;
     }
     setIsStyling(true);
@@ -210,7 +210,7 @@ export default function App() {
         Rules: Create a stylish outfit using the available items. Try to include a Top and a Bottom, or a Dress. Add Outerwear if suitable for the weather.
         Return ONLY a valid JSON object with:
         - 'itemIds': an array of the 'id' strings of the selected items.
-        - 'message': A warm, butler-style message in Chinese explaining why this outfit works for the current weather (e.g., "今天${weather}，这件深色工装裤很保暖...").
+        - 'message': A warm, butler-style message explaining why this outfit works for the current weather (e.g., "Today is ${weather}, this dark cargo pants will keep you warm...").
         Do not include markdown formatting.
       `;
       const response = await ai.models.generateContent({
@@ -222,7 +222,7 @@ export default function App() {
       setOutfitRecommendation(result);
     } catch (error) {
       console.error(error);
-      alert("生成搭配失败，请重试。");
+      alert("Failed to generate outfit, please try again.");
     } finally {
       setIsStyling(false);
     }
@@ -237,12 +237,12 @@ export default function App() {
       await Promise.all(outfitRecommendation.itemIds.map(id => 
         updateDoc(doc(db, 'users', user.uid, 'clothes', id), { lastWorn: now })
       ));
-      alert("打卡成功！已更新这些衣物的穿着记录。");
+      alert("Success! Updated the wear history for these items.");
       setOutfitRecommendation(null);
       setActiveTab('closet');
     } catch (error) {
       console.error("Failed to update outfit", error);
-      alert("打卡失败，请重试。");
+      alert("Failed to update wear history, please try again.");
     }
   };
 
@@ -252,15 +252,15 @@ export default function App() {
     setGeneratedCopy(null);
     try {
       const prompt = `
-        You are an expert second-hand clothing seller on Poshmark and Idle Fish (闲鱼).
-        Write an attractive sales listing in Chinese for this item:
+        You are an expert second-hand clothing seller on Poshmark and eBay.
+        Write an attractive sales listing for this item:
         - Category: ${item.category}
         - Color: ${item.color}
         - Style: ${item.style}
         - Season: ${item.season}
         
         Return ONLY a valid JSON object with:
-        - 'title': A catchy, click-baity title (e.g., "9新捡漏！超百搭米色休闲外套...").
+        - 'title': A catchy, click-baity title (e.g., "Like New! Versatile Beige Casual Jacket...").
         - 'description': A detailed, persuasive description including styling tips and condition (assume gently used). Add relevant hashtags at the end.
         Do not include markdown formatting like \`\`\`json.
       `;
@@ -273,7 +273,7 @@ export default function App() {
       setGeneratedCopy(result);
     } catch (error) {
       console.error(error);
-      alert("生成文案失败，请重试。");
+      alert("Failed to generate copy, please try again.");
       setSellingItem(null);
     } finally {
       setIsGeneratingCopy(false);
@@ -282,7 +282,7 @@ export default function App() {
 
   const deleteItem = async (id: string) => {
     if (!user) return;
-    if (window.confirm("确定要删除这件衣物吗？")) {
+    if (window.confirm("Are you sure you want to delete this item?")) {
       try {
         await deleteDoc(doc(db, 'users', user.uid, 'clothes', id));
         if (sellingItem?.id === id) {
@@ -307,16 +307,16 @@ export default function App() {
             <Shirt className="w-10 h-10" />
           </div>
           <h1 className="text-3xl font-bold mb-2">My Daily Closet</h1>
-          <p className="text-gray-500 text-center mb-10">您的智能衣橱管家<br/>让衣物从“堆积”变成“资产”</p>
+          <p className="text-gray-500 text-center mb-10">Your Smart Wardrobe Manager<br/>Turn piled-up clothes into liquid assets</p>
           <button 
             onClick={handleLogin}
             disabled={isLoggingIn}
             className="w-full bg-black text-white py-4 rounded-2xl font-medium flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-600"
           >
             {isLoggingIn ? (
-              <><Loader2 className="w-5 h-5 animate-spin" /> 正在打开登录窗口...</>
+              <><Loader2 className="w-5 h-5 animate-spin" /> Opening login window...</>
             ) : (
-              <><LogIn className="w-5 h-5" /> 使用 Google 账号登录</>
+              <><LogIn className="w-5 h-5" /> Sign in with Google</>
             )}
           </button>
         </div>
@@ -337,14 +337,14 @@ export default function App() {
         <header className="pt-12 pb-4 px-6 bg-white border-b border-gray-100 z-10 flex justify-between items-end">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
-              {activeTab === 'closet' && '我的衣橱'}
-              {activeTab === 'stylist' && 'AI 造型师'}
-              {activeTab === 'market' && '闲置流转'}
+              {activeTab === 'closet' && 'My Closet'}
+              {activeTab === 'stylist' && 'AI Stylist'}
+              {activeTab === 'market' && 'Marketplace'}
             </h1>
             <p className="text-sm text-gray-500 mt-1">
-              {activeTab === 'closet' && `共 ${clothes.length} 件单品`}
-              {activeTab === 'stylist' && `当前天气: ${weather}`}
-              {activeTab === 'market' && `发现 ${idleClothes.length} 件闲置衣物`}
+              {activeTab === 'closet' && `${clothes.length} items total`}
+              {activeTab === 'stylist' && `Current Weather: ${weather}`}
+              {activeTab === 'market' && `Found ${idleClothes.length} idle items`}
             </p>
           </div>
           <button onClick={() => signOut(auth)} className="text-gray-400 hover:text-red-500 p-2">
@@ -372,12 +372,12 @@ export default function App() {
                   {isUploading ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      <span>AI 识别入库中...</span>
+                      <span>AI analyzing & adding...</span>
                     </>
                   ) : (
                     <>
                       <Camera className="w-5 h-5" />
-                      <span className="font-medium">拍照 / 上传新衣物</span>
+                      <span className="font-medium">Take Photo / Upload Item</span>
                     </>
                   )}
                 </button>
@@ -393,8 +393,8 @@ export default function App() {
                 {clothes.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-20 text-gray-400 text-center">
                     <Shirt className="w-12 h-12 mb-3 opacity-20" />
-                    <p>您的衣橱空空如也</p>
-                    <p className="text-sm mt-1">点击上方按钮添加第一件单品吧！</p>
+                    <p>Your closet is empty</p>
+                    <p className="text-sm mt-1">Click the button above to add your first item!</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 gap-4 mt-6">
@@ -423,7 +423,7 @@ export default function App() {
                             />
                             {daysSinceWorn > 90 && (
                               <div className="absolute bottom-0 left-0 w-full bg-red-500/80 text-white text-[10px] py-1 text-center font-medium backdrop-blur-sm">
-                                闲置 {daysSinceWorn} 天
+                                Idle for {daysSinceWorn} days
                               </div>
                             )}
                           </div>
@@ -458,9 +458,9 @@ export default function App() {
                     <div className="w-16 h-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mb-4">
                       <Sparkles className="w-8 h-8" />
                     </div>
-                    <h2 className="text-lg font-semibold text-gray-900 mb-2">AI 造型师</h2>
+                    <h2 className="text-lg font-semibold text-gray-900 mb-2">AI Stylist</h2>
                     <p className="text-gray-500 text-sm mb-6 px-4">
-                      根据您衣橱中的单品和今日真实天气，为您量身定制穿搭方案。
+                      Tailored outfit recommendations based on your closet and today's weather.
                     </p>
                     <button 
                       onClick={generateOutfit}
@@ -468,13 +468,13 @@ export default function App() {
                       className="bg-black text-white px-6 py-3 rounded-full font-medium flex items-center gap-2 hover:bg-gray-800 disabled:bg-gray-300 transition-colors"
                     >
                       {isStyling ? (
-                        <><Loader2 className="w-5 h-5 animate-spin" /> 生成中...</>
+                        <><Loader2 className="w-5 h-5 animate-spin" /> Generating...</>
                       ) : (
-                        <><Sparkles className="w-5 h-5" /> 一键生成今日穿搭</>
+                        <><Sparkles className="w-5 h-5" /> Generate Today's Outfit</>
                       )}
                     </button>
                     {clothes.length === 0 && (
-                      <p className="text-xs text-red-400 mt-3">请先在衣橱中添加衣物</p>
+                      <p className="text-xs text-red-400 mt-3">Please add items to your closet first</p>
                     )}
                   </div>
                 ) : (
@@ -490,20 +490,20 @@ export default function App() {
                           onClick={confirmOutfit}
                           className="flex-1 bg-black text-white py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-1 hover:bg-gray-800"
                         >
-                          <CheckCircle2 className="w-4 h-4" /> 就穿这套 (打卡)
+                          <CheckCircle2 className="w-4 h-4" /> Wear This (Log)
                         </button>
                         <button 
                           onClick={generateOutfit}
                           disabled={isStyling}
                           className="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200"
                         >
-                          换一套
+                          Try Another
                         </button>
                       </div>
                     </div>
 
                     {/* Selected Items */}
-                    <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3 px-1">今日推荐单品</h3>
+                    <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3 px-1">Today's Recommendation</h3>
                     <div className="grid grid-cols-2 gap-4">
                       {clothes.filter(c => outfitRecommendation.itemIds.includes(c.id)).map(item => (
                         <div key={item.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
@@ -538,16 +538,16 @@ export default function App() {
                 {idleClothes.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-20 text-gray-400 text-center">
                     <Store className="w-12 h-12 mb-3 opacity-20" />
-                    <p>太棒了！</p>
-                    <p className="text-sm mt-1">您的衣橱目前没有超过 90 天未穿的闲置衣物。</p>
+                    <p>Awesome!</p>
+                    <p className="text-sm mt-1">You have no items idle for over 90 days.</p>
                   </div>
                 ) : !sellingItem ? (
                   <div className="animate-in fade-in">
                     <div className="bg-red-50 text-red-800 p-4 rounded-2xl mb-6 text-sm">
                       <p className="font-medium flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-red-500" /> 闲置预警
+                        <Sparkles className="w-4 h-4 text-red-500" /> Idle Alert
                       </p>
-                      <p className="mt-1 opacity-80">系统检测到以下衣物您已经超过 90 天没有穿过了。让 AI 为您一键生成高转化率的二手售卖文案，让闲置变现吧！</p>
+                      <p className="mt-1 opacity-80">The system detected the following items haven't been worn in over 90 days. Let AI generate high-converting sales copy to turn them into cash!</p>
                     </div>
                     
                     <div className="space-y-4">
@@ -559,14 +559,14 @@ export default function App() {
                             <div className="flex-1">
                               <div className="flex justify-between items-start">
                                 <h4 className="font-semibold text-gray-900">{item.color} {item.category}</h4>
-                                <span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium">闲置 {daysSinceWorn} 天</span>
+                                <span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium">Idle {daysSinceWorn} days</span>
                               </div>
                               <p className="text-xs text-gray-500 mt-1">{item.style} • {item.season}</p>
                               <button 
                                 onClick={() => generateSalesCopy(item)}
                                 className="mt-3 text-xs font-medium bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors"
                               >
-                                一键变现
+                                Sell Now
                               </button>
                             </div>
                           </div>
@@ -580,7 +580,7 @@ export default function App() {
                       onClick={() => { setSellingItem(null); setGeneratedCopy(null); }}
                       className="text-sm text-gray-500 mb-4 flex items-center gap-1 hover:text-black"
                     >
-                      ← 返回列表
+                      ← Back to list
                     </button>
 
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -590,16 +590,16 @@ export default function App() {
                         {isGeneratingCopy ? (
                           <div className="flex flex-col items-center justify-center py-10 text-gray-500">
                             <Loader2 className="w-8 h-8 animate-spin mb-3 text-green-500" />
-                            <p className="text-sm font-medium">AI 正在撰写爆款文案...</p>
+                            <p className="text-sm font-medium">AI is writing sales copy...</p>
                           </div>
                         ) : generatedCopy ? (
                           <div className="space-y-4">
                             <div>
-                              <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">商品标题</label>
+                              <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Listing Title</label>
                               <h3 className="text-lg font-bold text-gray-900 mt-1">{generatedCopy.title}</h3>
                             </div>
                             <div>
-                              <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">商品描述</label>
+                              <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Listing Description</label>
                               <div className="bg-gray-50 p-4 rounded-xl mt-1 text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
                                 {generatedCopy.description}
                               </div>
@@ -608,12 +608,12 @@ export default function App() {
                             <button 
                               onClick={() => {
                                 navigator.clipboard.writeText(`${generatedCopy.title}\n\n${generatedCopy.description}`);
-                                alert("文案已复制！您可以直接粘贴到闲鱼或 Poshmark。");
+                                alert("Copy copied to clipboard! You can paste it directly to Poshmark or eBay.");
                                 deleteItem(sellingItem.id); // Optional: Ask if they want to remove it from closet
                               }}
                               className="w-full bg-green-500 text-white py-3 rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-green-600 transition-colors mt-4"
                             >
-                              <Store className="w-4 h-4" /> 复制文案并去发布
+                              <Store className="w-4 h-4" /> Copy & Go to Sell
                             </button>
                           </div>
                         ) : null}
@@ -633,7 +633,7 @@ export default function App() {
             className={`flex flex-col items-center gap-1 transition-colors ${activeTab === 'closet' ? 'text-black' : 'text-gray-400 hover:text-gray-600'}`}
           >
             <Shirt className="w-6 h-6" />
-            <span className="text-[10px] font-medium">衣橱</span>
+            <span className="text-[10px] font-medium">Closet</span>
           </button>
           
           <button 
@@ -641,7 +641,7 @@ export default function App() {
             className={`flex flex-col items-center gap-1 transition-colors ${activeTab === 'stylist' ? 'text-black' : 'text-gray-400 hover:text-gray-600'}`}
           >
             <Sparkles className="w-6 h-6" />
-            <span className="text-[10px] font-medium">造型师</span>
+            <span className="text-[10px] font-medium">Stylist</span>
           </button>
           
           <button 
@@ -654,7 +654,7 @@ export default function App() {
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
               )}
             </div>
-            <span className="text-[10px] font-medium">流转</span>
+            <span className="text-[10px] font-medium">Market</span>
           </button>
         </nav>
 

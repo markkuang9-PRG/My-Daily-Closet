@@ -1,0 +1,58 @@
+# Contributing to My Daily Closet 🧥
+
+First off, thank you for considering contributing to **My Daily Closet**! It's people like you that make open-source such a great community. 
+
+We welcome contributions from everyone—whether you're a seasoned developer, a designer, or just someone who wants to fix a typo in the documentation.
+
+## 🚀 How Can You Contribute?
+
+### 1. Report Bugs
+If you find a bug, please open an issue on GitHub. Include as much detail as possible:
+- Steps to reproduce the bug.
+- Expected behavior vs. actual behavior.
+- Your operating system and browser version.
+
+### 2. Suggest Enhancements
+Have a great idea for a new feature? We'd love to hear it! Open an issue and use the "Feature Request" label. Describe how it works and why it would be useful.
+
+### 3. Write Code
+We have a list of open issues. Look for issues labeled **`good first issue`** or **`help wanted`**. 
+- **Frontend:** React, Tailwind CSS, Framer Motion.
+- **Backend/AI:** Firebase, Google Gemini API.
+
+## 🛠️ Local Development Setup
+
+To get the project running on your local machine:
+
+1. **Fork the repository** on GitHub.
+2. **Clone your fork** locally:
+   \`\`\`bash
+   git clone https://github.com/YOUR-USERNAME/MyDailyCloset.git
+   cd MyDailyCloset
+   \`\`\`
+3. **Install dependencies**:
+   \`\`\`bash
+   npm install
+   \`\`\`
+4. **Environment Variables**:
+   Create a \`.env\` file in the root directory and add your Gemini API key:
+   \`\`\`env
+   VITE_GEMINI_API_KEY=your_api_key_here
+   \`\`\`
+5. **Run the development server**:
+   \`\`\`bash
+   npm run dev
+   \`\`\`
+
+## 🔄 Pull Request Process
+
+1. Create a new branch for your feature or bugfix: \`git checkout -b feature/your-feature-name\`
+2. Make your changes and commit them with clear, descriptive messages.
+3. Push your branch to your fork: \`git push origin feature/your-feature-name\`
+4. Open a Pull Request (PR) against our \`main\` branch.
+5. A maintainer will review your PR, suggest changes if needed, and merge it!
+
+## ⚖️ License Note
+By contributing to My Daily Closet, you agree that your contributions will be licensed under its **AGPL-3.0 License**.
+
+Thank you for helping us build the future of circular fashion! 🌍♻️
