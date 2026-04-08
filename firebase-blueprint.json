@@ -1,0 +1,44 @@
+{
+  "entities": {
+    "ClothingItem": {
+      "title": "ClothingItem",
+      "description": "A piece of clothing in the user's closet.",
+      "type": "object",
+      "properties": {
+        "imageUrl": {
+          "type": "string",
+          "description": "Base64 encoded image string (compressed)"
+        },
+        "category": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "style": {
+          "type": "string"
+        },
+        "season": {
+          "type": "string"
+        },
+        "lastWorn": {
+          "type": "number",
+          "description": "Timestamp of when the item was last worn"
+        },
+        "createdAt": {
+          "type": "number",
+          "description": "Timestamp of when the item was added"
+        }
+      },
+      "required": ["imageUrl", "category", "color", "style", "season", "lastWorn", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/clothes/{clothingId}": {
+      "schema": {
+        "$ref": "#/entities/ClothingItem"
+      },
+      "description": "Stores the clothing items for a specific user."
+    }
+  }
+}
