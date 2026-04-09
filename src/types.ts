@@ -27,3 +27,15 @@ export interface GeneratedCopy {
   title: string;
   description: string;
 }
+
+export type ToastTone = 'info' | 'success' | 'error';
+
+export interface ToastInput {
+  message: string;
+  tone?: ToastTone;
+}
+
+export interface ToastItem extends ToastInput {
+  id: string;
+  tone: ToastTone;
+}

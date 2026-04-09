@@ -6,8 +6,10 @@ import { signInWithPopup, signOut, onAuthStateChanged, type User } from 'firebas
 import { AppHeader } from './components/AppHeader';
 import { AuthScreen } from './components/AuthScreen';
 import { BottomNav } from './components/BottomNav';
+import { ToastStack } from './components/ToastStack';
 import { useClosetActions } from './hooks/useClosetActions';
 import { useClothes } from './hooks/useClothes';
+import { useToast } from './hooks/useToast';
 import { useWeather } from './hooks/useWeather';
 import { logAppError } from './lib/logger';
 import type { AppTab } from './types';
@@ -21,6 +23,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<AppTab>('closet');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const currentPath = `/users/${user?.uid ?? 'anonymous'}/clothes`;
+  const { dismissToast, showToast, toasts } = useToast();
 
   // Auth Listener
   useEffect(() => {
@@ -56,6 +59,7 @@ export default function App() {
   } = useClosetActions({
     clothes,
     currentPath,
+    notify: showToast,
     user,
     weather,
   });
@@ -71,9 +75,15 @@ export default function App() {
         path: '/auth/google',
       });
       if (error.code === 'auth/popup-blocked') {
-        alert("Login popup was blocked by the browser. Please allow popups or open the app in a new tab.");
+        showToast({
+          message: 'Login popup was blocked. Allow popups or open the app in a new tab.',
+          tone: 'error',
+        });
       } else if (error.code !== 'auth/cancelled-popup-request' && error.code !== 'auth/popup-closed-by-user') {
-        alert("Login failed, please try again.");
+        showToast({
+          message: 'Login failed, please try again.',
+          tone: 'error',
+        });
       }
     } finally {
       setIsLoggingIn(false);
@@ -85,7 +95,12 @@ export default function App() {
   }
 
   if (!user) {
-    return <AuthScreen isLoggingIn={isLoggingIn} onLogin={handleLogin} />;
+    return (
+      <div className="relative min-h-screen bg-gray-50">
+        <ToastStack toasts={toasts} onDismiss={dismissToast} />
+        <AuthScreen isLoggingIn={isLoggingIn} onLogin={handleLogin} />
+      </div>
+    );
   }
 
   // Calculate idle clothes (not worn in 90 days)
@@ -96,6 +111,7 @@ export default function App() {
     <div className="min-h-screen bg-gray-50 flex justify-center font-sans text-gray-900">
       {/* Mobile Container */}
       <div className="w-full max-w-md bg-white h-screen flex flex-col shadow-2xl relative overflow-hidden">
+        <ToastStack toasts={toasts} onDismiss={dismissToast} />
         <AppHeader
           activeTab={activeTab}
           clothesCount={clothes.length}

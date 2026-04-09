@@ -6,11 +6,12 @@ import { requireAiClient } from '../lib/gemini';
 import { logAppError } from '../lib/logger';
 import { buildClothingAnalysisPrompt, buildOutfitPrompt, buildSalesCopyPrompt } from '../lib/prompts';
 import { compressImage, validateUpload } from '../lib/upload';
-import type { ClothingItem, ClothingMetadataInput, GeneratedCopy, OutfitRecommendation } from '../types';
+import type { ClothingItem, ClothingMetadataInput, GeneratedCopy, OutfitRecommendation, ToastInput } from '../types';
 
 type UseClosetActionsArgs = {
   clothes: ClothingItem[];
   currentPath: string;
+  notify: (toast: ToastInput) => void;
   user: User | null;
   weather: string;
 };
@@ -20,7 +21,7 @@ const parseModelJson = (text: string | undefined) => {
   return JSON.parse(cleanJsonStr);
 };
 
-export const useClosetActions = ({ clothes, currentPath, user, weather }: UseClosetActionsArgs) => {
+export const useClosetActions = ({ clothes, currentPath, notify, user, weather }: UseClosetActionsArgs) => {
   const [isUploading, setIsUploading] = useState(false);
   const [isStyling, setIsStyling] = useState(false);
   const [outfitRecommendation, setOutfitRecommendation] = useState<OutfitRecommendation | null>(null);
@@ -83,18 +84,30 @@ export const useClosetActions = ({ clothes, currentPath, user, weather }: UseClo
           fileSize: file.size,
         },
       });
-      alert(error instanceof Error ? error.message : 'Upload or analysis failed, please try again.');
+      notify({
+        message: error instanceof Error ? error.message : 'Upload or analysis failed, please try again.',
+        tone: 'error',
+      });
+      return;
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
     }
+
+    notify({
+      message: 'Item added to your closet. Review and edit the labels if needed.',
+      tone: 'success',
+    });
   };
 
   const generateOutfit = async () => {
     if (clothes.length === 0) {
-      alert('Your closet is empty! Please upload some clothes first.');
+      notify({
+        message: 'Your closet is empty. Upload some clothes first.',
+        tone: 'info',
+      });
       return;
     }
 
@@ -118,7 +131,10 @@ export const useClosetActions = ({ clothes, currentPath, user, weather }: UseClo
           weather,
         },
       });
-      alert(error instanceof Error ? error.message : 'Failed to generate outfit, please try again.');
+      notify({
+        message: error instanceof Error ? error.message : 'Failed to generate outfit, please try again.',
+        tone: 'error',
+      });
     } finally {
       setIsStyling(false);
     }
@@ -132,7 +148,10 @@ export const useClosetActions = ({ clothes, currentPath, user, weather }: UseClo
       await Promise.all(
         outfitRecommendation.itemIds.map((id) => updateDoc(doc(db, 'users', user.uid, 'clothes', id), { lastWorn: now })),
       );
-      alert('Success! Updated the wear history for these items.');
+      notify({
+        message: 'Updated the wear history for the recommended items.',
+        tone: 'success',
+      });
       setOutfitRecommendation(null);
       return true;
     } catch (error) {
@@ -144,7 +163,10 @@ export const useClosetActions = ({ clothes, currentPath, user, weather }: UseClo
           itemIds: outfitRecommendation.itemIds,
         },
       });
-      alert('Failed to update wear history, please try again.');
+      notify({
+        message: 'Failed to update wear history, please try again.',
+        tone: 'error',
+      });
       return false;
     }
   };
@@ -171,7 +193,10 @@ export const useClosetActions = ({ clothes, currentPath, user, weather }: UseClo
           itemId: item.id,
         },
       });
-      alert(error instanceof Error ? error.message : 'Failed to generate copy, please try again.');
+      notify({
+        message: error instanceof Error ? error.message : 'Failed to generate copy, please try again.',
+        tone: 'error',
+      });
       setSellingItem(null);
     } finally {
       setIsGeneratingCopy(false);
@@ -207,6 +232,10 @@ export const useClosetActions = ({ clothes, currentPath, user, weather }: UseClo
     try {
       await updateDoc(doc(db, 'users', user.uid, 'clothes', editingItem.id), normalizedValues);
       setEditingItem(null);
+      notify({
+        message: 'Item details updated.',
+        tone: 'success',
+      });
       return true;
     } catch (error) {
       logAppError(error, {
@@ -218,7 +247,10 @@ export const useClosetActions = ({ clothes, currentPath, user, weather }: UseClo
           values: normalizedValues,
         },
       });
-      alert('Failed to save item details, please try again.');
+      notify({
+        message: 'Failed to save item details, please try again.',
+        tone: 'error',
+      });
       return false;
     } finally {
       setIsSavingEdit(false);
@@ -251,7 +283,10 @@ export const useClosetActions = ({ clothes, currentPath, user, weather }: UseClo
 
   const copyGeneratedCopy = async (itemId: string, copy: GeneratedCopy) => {
     await navigator.clipboard.writeText(`${copy.title}\n\n${copy.description}`);
-    alert('Copy copied to clipboard! You can paste it directly to Poshmark or eBay.');
+    notify({
+      message: 'Copy added to clipboard. You can paste it into Poshmark or eBay.',
+      tone: 'success',
+    });
     await deleteItem(itemId);
   };
 
