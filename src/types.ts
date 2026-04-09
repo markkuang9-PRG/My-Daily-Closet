@@ -39,3 +39,11 @@ export interface ToastItem extends ToastInput {
   id: string;
   tone: ToastTone;
 }
+
+export type WeatherSource = 'loading' | 'live' | 'fallback';
+
+export interface WeatherState {
+  summary: string;
+  detail: string;
+  source: WeatherSource;
+}

@@ -1,11 +1,11 @@
 import { LogOut } from 'lucide-react';
-import type { AppTab } from '../types';
+import type { AppTab, WeatherState } from '../types';
 
 type AppHeaderProps = {
   activeTab: AppTab;
   clothesCount: number;
   idleClothesCount: number;
-  weather: string;
+  weather: WeatherState;
   onLogout: () => void;
 };
 
@@ -15,9 +15,13 @@ const titles: Record<AppTab, string> = {
   market: 'Marketplace',
 };
 
-const subtitles = (tab: AppTab, clothesCount: number, idleClothesCount: number, weather: string) => {
+const subtitles = (tab: AppTab, clothesCount: number, idleClothesCount: number, weather: WeatherState) => {
   if (tab === 'closet') return `${clothesCount} items total`;
-  if (tab === 'stylist') return `Current Weather: ${weather}`;
+  if (tab === 'stylist') {
+    if (weather.source === 'loading') return weather.detail;
+    if (weather.source === 'fallback') return `${weather.summary} • fallback`;
+    return `Current weather: ${weather.summary}`;
+  }
   return `Found ${idleClothesCount} idle items`;
 };
 

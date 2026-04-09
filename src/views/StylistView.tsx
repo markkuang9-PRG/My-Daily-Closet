@@ -1,12 +1,13 @@
 import { CheckCircle2, Loader2, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 import { ClothingCard } from '../components/ClothingCard';
-import type { ClothingItem, OutfitRecommendation } from '../types';
+import type { ClothingItem, OutfitRecommendation, WeatherState } from '../types';
 
 type StylistViewProps = {
   clothes: ClothingItem[];
   isStyling: boolean;
   outfitRecommendation: OutfitRecommendation | null;
+  weather: WeatherState;
   onGenerateOutfit: () => void;
   onConfirmOutfit: () => void;
 };
@@ -15,6 +16,7 @@ export const StylistView = ({
   clothes,
   isStyling,
   outfitRecommendation,
+  weather,
   onGenerateOutfit,
   onConfirmOutfit,
 }: StylistViewProps) => {
@@ -39,10 +41,15 @@ export const StylistView = ({
           <p className="text-gray-500 text-sm mb-6 px-4">
             Tailored outfit recommendations based on your closet and today&apos;s weather.
           </p>
+          <div className="rounded-2xl bg-white px-4 py-3 text-left shadow-sm ring-1 ring-gray-100 max-w-sm">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Weather input</p>
+            <p className="mt-1 text-sm font-medium text-gray-800">{weather.summary}</p>
+            <p className="mt-1 text-xs text-gray-500">{weather.detail}</p>
+          </div>
           <button
             onClick={onGenerateOutfit}
             disabled={isStyling || clothes.length === 0}
-            className="bg-black text-white px-6 py-3 rounded-full font-medium flex items-center gap-2 hover:bg-gray-800 disabled:bg-gray-300 transition-colors"
+            className="bg-black text-white px-6 py-3 rounded-full font-medium flex items-center gap-2 hover:bg-gray-800 disabled:bg-gray-300 transition-colors mt-6"
           >
             {isStyling ? (
               <>

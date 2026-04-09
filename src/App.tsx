@@ -61,7 +61,7 @@ export default function App() {
     currentPath,
     notify: showToast,
     user,
-    weather,
+    weather: weather.summary,
   });
 
   const handleLogin = async () => {
@@ -142,6 +142,7 @@ export default function App() {
                 clothes={clothes}
                 isStyling={isStyling}
                 outfitRecommendation={outfitRecommendation}
+                weather={weather}
                 onGenerateOutfit={generateOutfit}
                 onConfirmOutfit={async () => {
                   const didConfirm = await confirmOutfit();

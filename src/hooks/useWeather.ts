@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { logAppError } from '../lib/logger';
+import { buildLiveWeatherState, buildWeatherFallbackState, buildWeatherLoadingState } from '../lib/weather';
+import type { WeatherState } from '../types';
 
 export const useWeather = (userId?: string | null) => {
-  const [weather, setWeather] = useState<string>('Fetching weather...');
+  const [weather, setWeather] = useState<WeatherState>(buildWeatherLoadingState());
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      setWeather('20°C, Clear (Default)');
+      setWeather(buildWeatherFallbackState('unsupported'));
       return;
     }
 
@@ -18,26 +20,28 @@ export const useWeather = (userId?: string | null) => {
           const res = await fetch(
             `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`,
           );
+          if (!res.ok) {
+            throw new Error(`Weather request failed with status ${res.status}`);
+          }
           const data = await res.json();
-          const code = data.current_weather.weathercode;
-          let condition = 'Clear';
+          const currentWeather = data.current_weather;
 
-          if (code >= 51 && code <= 67) condition = 'Rain';
-          if (code >= 71 && code <= 77) condition = 'Snow';
-          if (code >= 1 && code <= 3) condition = 'Cloudy';
+          if (!currentWeather || typeof currentWeather.temperature !== 'number' || typeof currentWeather.weathercode !== 'number') {
+            throw new Error('Weather response was missing current weather fields.');
+          }
 
-          setWeather(`${data.current_weather.temperature}°C, ${condition}`);
+          setWeather(buildLiveWeatherState(currentWeather.temperature, currentWeather.weathercode));
         } catch (error) {
           logAppError(error, {
             operation: 'fetch_weather',
             path: window.location.pathname,
             userId: userId ?? null,
           });
-          setWeather('20°C, Clear (Default)');
+          setWeather(buildWeatherFallbackState('fetch'));
         }
       },
       () => {
-        setWeather('20°C, Clear (Default)');
+        setWeather(buildWeatherFallbackState('permission'));
       },
     );
   }, [userId]);
