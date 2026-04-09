@@ -52,7 +52,14 @@ export const MarketView = ({
               const daysSinceWorn = Math.floor((Date.now() - item.lastWorn) / (1000 * 60 * 60 * 24));
               return (
                 <div key={item.id} className="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex gap-4 items-center">
-                  <img src={item.imageUrl} alt={item.category} className="w-20 h-24 object-cover rounded-xl" referrerPolicy="no-referrer" />
+                  <img
+                    src={item.imageUrl}
+                    alt={item.category}
+                    className="w-20 h-24 object-cover rounded-xl"
+                    referrerPolicy="no-referrer"
+                    loading="lazy"
+                    decoding="async"
+                  />
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <h4 className="font-semibold text-gray-900">
@@ -84,7 +91,14 @@ export const MarketView = ({
           </button>
 
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <img src={sellingItem.imageUrl} alt="Selling item" className="w-full h-48 object-cover" referrerPolicy="no-referrer" />
+            <img
+              src={sellingItem.imageUrl}
+              alt="Selling item"
+              className="w-full h-48 object-cover"
+              referrerPolicy="no-referrer"
+              loading="lazy"
+              decoding="async"
+            />
 
             <div className="p-5">
               {isGeneratingCopy ? (

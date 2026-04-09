@@ -11,6 +11,13 @@ export interface ClothingItem {
   createdAt: number;
 }
 
+export interface ClothingMetadataInput {
+  category: string;
+  color: string;
+  style: string;
+  season: string;
+}
+
 export interface OutfitRecommendation {
   message: string;
   itemIds: string[];

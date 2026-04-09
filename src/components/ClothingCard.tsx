@@ -7,14 +7,22 @@ type ClothingCardProps = {
   variant?: 'closet' | 'compact';
   idleLabel?: string | null;
   onDelete?: (id: string) => void;
+  onEdit?: (item: ClothingItem) => void;
 };
 
-export const ClothingCard = ({ item, variant = 'closet', idleLabel, onDelete }: ClothingCardProps) => {
+export const ClothingCard = ({ item, variant = 'closet', idleLabel, onDelete, onEdit }: ClothingCardProps) => {
   if (variant === 'compact') {
     return (
       <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
         <div className="aspect-[4/5] relative bg-gray-100">
-          <img src={item.imageUrl} alt={item.category} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+          <img
+            src={item.imageUrl}
+            alt={item.category}
+            className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
         <div className="p-3">
           <span className="font-semibold text-sm block truncate">{item.category}</span>
@@ -31,6 +39,14 @@ export const ClothingCard = ({ item, variant = 'closet', idleLabel, onDelete }: 
       animate={{ opacity: 1, scale: 1 }}
       className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 group relative"
     >
+      {onEdit ? (
+        <button
+          onClick={() => onEdit(item)}
+          className="absolute top-2 left-2 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-medium text-gray-700 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 z-10"
+        >
+          Edit
+        </button>
+      ) : null}
       {onDelete ? (
         <button
           onClick={() => onDelete(item.id)}
@@ -45,6 +61,8 @@ export const ClothingCard = ({ item, variant = 'closet', idleLabel, onDelete }: 
           alt={item.category}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           referrerPolicy="no-referrer"
+          loading="lazy"
+          decoding="async"
         />
         {idleLabel ? (
           <div className="absolute bottom-0 left-0 w-full bg-red-500/80 text-white text-[10px] py-1 text-center font-medium backdrop-blur-sm">

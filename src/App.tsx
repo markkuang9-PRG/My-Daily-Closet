@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { Loader2 } from 'lucide-react';
-import { auth, db, googleProvider } from './firebase';
-import { signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
-import { addDoc, collection, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { auth, googleProvider } from './firebase';
+import { signInWithPopup, signOut, onAuthStateChanged, type User } from 'firebase/auth';
 import { AppHeader } from './components/AppHeader';
 import { AuthScreen } from './components/AuthScreen';
 import { BottomNav } from './components/BottomNav';
@@ -35,20 +34,25 @@ export default function App() {
   const weather = useWeather(user?.uid);
   const clothes = useClothes(user, isAuthReady);
   const {
+    cancelEditingItem,
     clearSellingItem,
     confirmOutfit,
     copyGeneratedCopy,
     deleteItem,
+    editingItem,
     fileInputRef,
     generateOutfit,
     generateSalesCopy,
     generatedCopy,
     handleFileUpload,
     isGeneratingCopy,
+    isSavingEdit,
     isStyling,
     isUploading,
     outfitRecommendation,
+    saveItemMetadata,
     sellingItem,
+    startEditingItem,
   } = useClosetActions({
     clothes,
     currentPath,
@@ -105,10 +109,15 @@ export default function App() {
             {activeTab === 'closet' && (
               <ClosetView
                 clothes={clothes}
+                editingItem={editingItem}
                 fileInputRef={fileInputRef}
+                isSavingEdit={isSavingEdit}
                 isUploading={isUploading}
+                onCancelEdit={cancelEditingItem}
+                onEditItem={startEditingItem}
                 onFileUpload={handleFileUpload}
                 onDeleteItem={deleteItem}
+                onSaveEdit={saveItemMetadata}
               />
             )}
 

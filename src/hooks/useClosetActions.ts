@@ -6,7 +6,7 @@ import { requireAiClient } from '../lib/gemini';
 import { logAppError } from '../lib/logger';
 import { buildClothingAnalysisPrompt, buildOutfitPrompt, buildSalesCopyPrompt } from '../lib/prompts';
 import { compressImage, validateUpload } from '../lib/upload';
-import type { ClothingItem, GeneratedCopy, OutfitRecommendation } from '../types';
+import type { ClothingItem, ClothingMetadataInput, GeneratedCopy, OutfitRecommendation } from '../types';
 
 type UseClosetActionsArgs = {
   clothes: ClothingItem[];
@@ -27,6 +27,8 @@ export const useClosetActions = ({ clothes, currentPath, user, weather }: UseClo
   const [sellingItem, setSellingItem] = useState<ClothingItem | null>(null);
   const [generatedCopy, setGeneratedCopy] = useState<GeneratedCopy | null>(null);
   const [isGeneratingCopy, setIsGeneratingCopy] = useState(false);
+  const [editingItem, setEditingItem] = useState<ClothingItem | null>(null);
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -181,6 +183,48 @@ export const useClosetActions = ({ clothes, currentPath, user, weather }: UseClo
     setGeneratedCopy(null);
   };
 
+  const startEditingItem = (item: ClothingItem) => {
+    setEditingItem(item);
+  };
+
+  const cancelEditingItem = () => {
+    if (isSavingEdit) return;
+    setEditingItem(null);
+  };
+
+  const saveItemMetadata = async (values: ClothingMetadataInput) => {
+    if (!user || !editingItem) return false;
+
+    const normalizedValues = {
+      category: values.category || 'Unknown',
+      color: values.color || 'Unknown',
+      style: values.style || 'Unknown',
+      season: values.season || 'Unknown',
+    };
+
+    setIsSavingEdit(true);
+
+    try {
+      await updateDoc(doc(db, 'users', user.uid, 'clothes', editingItem.id), normalizedValues);
+      setEditingItem(null);
+      return true;
+    } catch (error) {
+      logAppError(error, {
+        operation: 'save_clothing_metadata',
+        path: currentPath,
+        userId: user.uid,
+        extra: {
+          itemId: editingItem.id,
+          values: normalizedValues,
+        },
+      });
+      alert('Failed to save item details, please try again.');
+      return false;
+    } finally {
+      setIsSavingEdit(false);
+    }
+  };
+
   const deleteItem = async (id: string) => {
     if (!user) return;
     if (!window.confirm('Are you sure you want to delete this item?')) return;
@@ -189,6 +233,9 @@ export const useClosetActions = ({ clothes, currentPath, user, weather }: UseClo
       await deleteDoc(doc(db, 'users', user.uid, 'clothes', id));
       if (sellingItem?.id === id) {
         clearSellingItem();
+      }
+      if (editingItem?.id === id) {
+        setEditingItem(null);
       }
     } catch (error) {
       logAppError(error, {
@@ -209,19 +256,24 @@ export const useClosetActions = ({ clothes, currentPath, user, weather }: UseClo
   };
 
   return {
+    cancelEditingItem,
     deleteItem,
+    editingItem,
     generateOutfit,
     generateSalesCopy,
     generatedCopy,
     handleFileUpload,
     fileInputRef,
     isGeneratingCopy,
+    isSavingEdit,
     isStyling,
     isUploading,
     outfitRecommendation,
-    sellingItem,
     clearSellingItem,
     confirmOutfit,
     copyGeneratedCopy,
+    saveItemMetadata,
+    sellingItem,
+    startEditingItem,
   };
 };
