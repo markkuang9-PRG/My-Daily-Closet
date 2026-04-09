@@ -2,7 +2,7 @@ import { useRef, useState, type ChangeEvent } from 'react';
 import type { User } from 'firebase/auth';
 import { addDoc, collection, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
-import { requireAiClient } from '../lib/gemini';
+import { getAiClient } from '../lib/gemini';
 import { logAppError } from '../lib/logger';
 import { buildClothingAnalysisPrompt, buildOutfitPrompt, buildSalesCopyPrompt } from '../lib/prompts';
 import { compressImage, validateUpload } from '../lib/upload';
@@ -47,7 +47,8 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
       }
 
       const base64Data = base64String.split(',')[1];
-      const response = await requireAiClient().models.generateContent({
+      const aiClient = await getAiClient();
+      const response = await aiClient.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: [{ inlineData: { data: base64Data, mimeType: 'image/jpeg' } }, buildClothingAnalysisPrompt()],
       });
@@ -114,7 +115,8 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
     setIsStyling(true);
 
     try {
-      const response = await requireAiClient().models.generateContent({
+      const aiClient = await getAiClient();
+      const response = await aiClient.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: buildOutfitPrompt(clothes, weather),
       });
@@ -177,7 +179,8 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
     setGeneratedCopy(null);
 
     try {
-      const response = await requireAiClient().models.generateContent({
+      const aiClient = await getAiClient();
+      const response = await aiClient.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: buildSalesCopyPrompt(item),
       });

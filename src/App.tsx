@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { Loader2 } from 'lucide-react';
 import { auth, googleProvider } from './firebase';
@@ -14,8 +14,22 @@ import { useWeather } from './hooks/useWeather';
 import { logAppError } from './lib/logger';
 import type { AppTab } from './types';
 import { ClosetView } from './views/ClosetView';
-import { MarketView } from './views/MarketView';
-import { StylistView } from './views/StylistView';
+
+const StylistView = lazy(async () => {
+  const module = await import('./views/StylistView');
+  return { default: module.StylistView };
+});
+
+const MarketView = lazy(async () => {
+  const module = await import('./views/MarketView');
+  return { default: module.MarketView };
+});
+
+const TabFallback = () => (
+  <div className="flex items-center justify-center py-20 text-gray-400">
+    <Loader2 className="h-6 w-6 animate-spin" />
+  </div>
+);
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -138,31 +152,35 @@ export default function App() {
             )}
 
             {activeTab === 'stylist' && (
-              <StylistView
-                clothes={clothes}
-                isStyling={isStyling}
-                outfitRecommendation={outfitRecommendation}
-                weather={weather}
-                onGenerateOutfit={generateOutfit}
-                onConfirmOutfit={async () => {
-                  const didConfirm = await confirmOutfit();
-                  if (didConfirm) {
-                    setActiveTab('closet');
-                  }
-                }}
-              />
+              <Suspense fallback={<TabFallback />}>
+                <StylistView
+                  clothes={clothes}
+                  isStyling={isStyling}
+                  outfitRecommendation={outfitRecommendation}
+                  weather={weather}
+                  onGenerateOutfit={generateOutfit}
+                  onConfirmOutfit={async () => {
+                    const didConfirm = await confirmOutfit();
+                    if (didConfirm) {
+                      setActiveTab('closet');
+                    }
+                  }}
+                />
+              </Suspense>
             )}
 
             {activeTab === 'market' && (
-              <MarketView
-                idleClothes={idleClothes}
-                sellingItem={sellingItem}
-                generatedCopy={generatedCopy}
-                isGeneratingCopy={isGeneratingCopy}
-                onGenerateSalesCopy={generateSalesCopy}
-                onClearSellingItem={clearSellingItem}
-                onCopyGeneratedCopy={copyGeneratedCopy}
-              />
+              <Suspense fallback={<TabFallback />}>
+                <MarketView
+                  idleClothes={idleClothes}
+                  sellingItem={sellingItem}
+                  generatedCopy={generatedCopy}
+                  isGeneratingCopy={isGeneratingCopy}
+                  onGenerateSalesCopy={generateSalesCopy}
+                  onClearSellingItem={clearSellingItem}
+                  onCopyGeneratedCopy={copyGeneratedCopy}
+                />
+              </Suspense>
             )}
           </AnimatePresence>
         </main>
