@@ -42,5 +42,6 @@ For first-time contributors, maintainers should try to provide:
 - [ROADMAP.md](ROADMAP.md)
 - [GOOD_FIRST_TASKS.md](GOOD_FIRST_TASKS.md)
 - [ISSUE_BACKLOG.md](ISSUE_BACKLOG.md)
+- [OUTREACH_PLAYBOOK.md](OUTREACH_PLAYBOOK.md)
 - [CONTRIBUTING.md](CONTRIBUTING.md)
 - [GOVERNANCE.md](GOVERNANCE.md)

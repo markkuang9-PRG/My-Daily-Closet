@@ -22,116 +22,52 @@ Create these labels in GitHub before posting issues:
 
 ### Issue 1
 
-**Title:** Extract upload flow into a dedicated hook
-
-**Labels:** `help wanted`, `frontend`, `refactor`
-
-**Problem**
-
-The clothing upload flow still lives directly in `src/App.tsx`. It would be easier to maintain and test if the upload, compression, AI analysis, and Firestore write logic were grouped into a dedicated hook or service boundary.
-
-**Scope**
-
-- extract the upload workflow into a dedicated module or hook;
-- keep the existing user-visible behavior the same;
-- preserve structured error logging;
-- avoid a broad UI redesign.
-
-**Acceptance criteria**
-
-- `App.tsx` no longer owns the full upload workflow directly;
-- `npm run lint` passes;
-- `npm run build` passes.
-
-### Issue 2
-
-**Title:** Standardize Gemini prompt helpers for outfit and resale generation
-
-**Labels:** `help wanted`, `ai`, `refactor`
-
-**Problem**
-
-Gemini prompt strings are still embedded inline in the main app logic. Pulling them into small helper functions would make future prompt tuning easier and reduce noise in the UI layer.
-
-**Scope**
-
-- move inline prompt construction into dedicated helper functions;
-- keep current outputs compatible with the UI;
-- do not change the product flow.
-
-**Acceptance criteria**
-
-- prompt generation is isolated from UI rendering code;
-- lint and build continue to pass.
-
-### Issue 3
-
-**Title:** Add lazy loading to closet and market item images
-
-**Labels:** `good first issue`, `frontend`, `performance`, `ux`
-
-**Problem**
-
-The closet and market views render item images immediately. Adding native lazy loading would improve performance for longer closets with minimal risk.
-
-**Scope**
-
-- apply image lazy loading where appropriate;
-- preserve current layout and styling;
-- avoid introducing a third-party image library.
-
-**Acceptance criteria**
-
-- closet item images lazy load;
-- market item images lazy load where reasonable;
-- no layout regressions in current views.
-
-### Issue 4
-
-**Title:** Add editable metadata after AI clothing import
-
-**Labels:** `help wanted`, `frontend`, `ux`
-
-**Problem**
-
-AI tagging is helpful, but users currently cannot correct category, color, style, or season after import. That blocks trust in the wardrobe inventory.
-
-**Scope**
-
-- add a lightweight way to edit item metadata after upload;
-- support category, color, style, and season;
-- keep the current app structure intact.
-
-**Acceptance criteria**
-
-- users can edit imported metadata;
-- changes persist in Firestore;
-- the closet view updates correctly after edits.
-
-### Issue 5
-
 **Title:** Improve weather code mapping and fallback states
 
 **Labels:** `good first issue`, `frontend`, `ux`
 
 **Problem**
 
-Weather handling is currently simple and works, but the code-to-condition mapping and fallback messaging can be more robust.
+The app uses Open-Meteo weather data, but the display and fallback behavior can still be more robust. If location access fails, if the weather API returns an unfamiliar code, or if the request takes too long, the UI should remain clear and calm.
 
 **Scope**
 
-- improve WMO code mapping;
-- keep the current API provider;
-- improve fallback messaging without adding location settings yet.
+- improve weather-code-to-label mapping;
+- improve fallback messaging when geolocation or weather fetches fail;
+- keep the current provider and general UI structure;
+- avoid adding account-level location settings in this issue.
 
 **Acceptance criteria**
 
-- weather display is clearer and more consistent;
-- fallback behavior remains stable if geolocation or the weather API fails.
+- weather labels are clearer and more consistent;
+- fallback states do not leave confusing empty text;
+- `npm run lint` passes;
+- `npm run build` passes.
 
-## Wave 2: publish after the first responses
+### Issue 2
 
-### Issue 6
+**Title:** Let users edit generated resale copy before copying
+
+**Labels:** `help wanted`, `frontend`, `ux`
+
+**Problem**
+
+The resale flow generates useful copy, but users cannot refine it before copying. For a marketplace workflow, the AI output should be an editable draft rather than locked final text.
+
+**Scope**
+
+- make generated title editable;
+- make generated description editable;
+- preserve the existing one-click generation flow;
+- do not introduce a full listing manager.
+
+**Acceptance criteria**
+
+- users can adjust generated resale copy before copying it;
+- current flow still works if users make no edits;
+- lint and build continue to pass.
+
+### Issue 3
 
 **Title:** Reduce initial bundle size with targeted code splitting
 
@@ -139,60 +75,131 @@ Weather handling is currently simple and works, but the code-to-condition mappin
 
 **Problem**
 
-The production build currently warns about large JavaScript chunks. The project needs a focused performance pass rather than a broad rewrite.
+The production build currently warns about a large JavaScript bundle. The project needs a focused performance pass, not a broad rewrite.
 
 **Scope**
 
-- analyze the largest client bundle contributors;
-- apply targeted dynamic import or chunking improvements where justified;
-- preserve current behavior.
+- identify obvious code-splitting opportunities;
+- keep user-visible behavior consistent;
+- document what changed and what measurable improvement was achieved.
 
 **Acceptance criteria**
 
-- build still passes;
-- bundle warning is reduced or documented with concrete improvements.
+- `npm run build` still passes;
+- bundle warning is reduced or the biggest contributors are documented clearly in the PR;
+- no regression in main closet, stylist, or market flows.
 
-### Issue 7
+### Issue 4
 
-**Title:** Add basic unit tests for upload validation and utility helpers
+**Title:** Add upload success and failure toasts instead of `alert`
 
-**Labels:** `help wanted`, `frontend`, `refactor`
+**Labels:** `good first issue`, `frontend`, `ux`
 
 **Problem**
 
-The project now has reusable helper modules, but very little test coverage. A small first test set would make future refactors safer.
+The app still uses blocking browser `alert` dialogs in key paths such as uploads and AI actions. That makes the product feel rough and interrupts the user flow.
 
 **Scope**
 
-- choose a lightweight test setup;
-- add tests for upload validation and related utility behavior;
-- do not attempt broad end-to-end coverage in this issue.
+- replace `alert` in one focused workflow, starting with upload success and failure states;
+- keep the UI lightweight;
+- avoid a broad notification framework unless it is justified and contained.
 
 **Acceptance criteria**
 
-- tests run in CI or are documented for immediate follow-up;
-- at least the core upload validation behavior is covered.
+- users receive clear non-blocking feedback after upload attempts;
+- current upload behavior remains understandable;
+- lint and build pass.
 
-### Issue 8
+### Issue 5
 
-**Title:** Improve accessibility of buttons, status text, and empty states
+**Title:** Add tests for outfit/result parsing edge cases
+
+**Labels:** `help wanted`, `ai`, `refactor`
+
+**Problem**
+
+AI integrations are fragile around malformed JSON and unexpected model responses. The project has some test coverage, but not enough around parsing and fallback behavior in the outfit and copy flows.
+
+**Scope**
+
+- add deterministic tests for parsing helpers or extracted fallback logic;
+- focus on malformed or partial model output;
+- avoid broad UI or network-level tests.
+
+**Acceptance criteria**
+
+- tests cover malformed AI output or missing fields;
+- the coverage helps protect current fallback behavior;
+- `npm run test` passes.
+
+## Wave 2: publish after the first responses
+
+### Issue 6
+
+**Title:** Improve accessibility of dialogs, buttons, and loading states
 
 **Labels:** `help wanted`, `frontend`, `ux`
 
 **Problem**
 
-The app is visually coherent, but accessibility quality can be improved across key actions and status messaging.
+The app is visually coherent, but accessibility quality can be improved across dialogs, action buttons, and loading states. This is especially relevant now that the closet editor exists.
 
 **Scope**
 
-- improve button labels and semantics where needed;
-- review empty states and loading text;
-- avoid large design changes.
+- review core action paths for keyboard and screen-reader clarity;
+- improve labels, focus states, and semantic affordances where needed;
+- avoid a broad visual redesign.
 
 **Acceptance criteria**
 
-- no accessibility regression in current flows;
-- keyboard and screen-reader affordances improve in at least the main action paths.
+- accessibility improves in the main user flows;
+- no visual regression in current views;
+- lint and build continue to pass.
+
+### Issue 7
+
+**Title:** Improve Firestore error recovery and retry messaging
+
+**Labels:** `help wanted`, `firebase`, `ux`
+
+**Problem**
+
+Firestore errors are logged, but the user-facing recovery guidance is still thin. The app should better explain what happened and what users can do next.
+
+**Scope**
+
+- improve error messages in core write flows;
+- keep structured logging intact;
+- avoid introducing server-side infrastructure in this issue.
+
+**Acceptance criteria**
+
+- users see clearer recovery guidance on Firestore write failures;
+- logs remain structured for maintainer debugging;
+- current flows remain stable.
+
+### Issue 8
+
+**Title:** Add occasion-aware outfit prompts without changing the main flow
+
+**Labels:** `help wanted`, `ai`, `frontend`
+
+**Problem**
+
+The AI stylist is useful, but it currently works from closet inventory and weather only. A small occasion input could make recommendations more relevant without changing the overall UX too much.
+
+**Scope**
+
+- add a small optional occasion input such as date night, office, or travel;
+- keep the current recommendation flow intact;
+- avoid a large settings or profile system.
+
+**Acceptance criteria**
+
+- users can optionally supply an occasion before generating an outfit;
+- the styling flow still works when no occasion is provided;
+- scope remains narrow and MVP-friendly.
 
 ## Maintainer guidance
 
