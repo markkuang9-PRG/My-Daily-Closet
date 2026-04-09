@@ -44,10 +44,25 @@ We welcome contributions to:
 - Integrate with local second-hand marketplaces worldwide via APIs.
 - Create more personalized and diverse AI styling prompts.
 
+## 👥 Contributors Wanted Now
+
+We are actively looking for a small number of contributors who want to help turn the current prototype into a stable MVP.
+
+The best fits right now are developers who can help with:
+
+- React cleanup and component polish
+- Firebase reliability and error handling
+- AI prompt quality and response validation
+- performance work such as bundle reduction and image delivery
+- accessibility and mobile UX fixes
+
+If that sounds like your area, start with [CONTRIBUTOR_START_HERE.md](CONTRIBUTOR_START_HERE.md).
+
 ## 🧭 Where Contributors Should Start
 
 If you are evaluating whether to contribute, start here:
 
+- [CONTRIBUTOR_START_HERE.md](CONTRIBUTOR_START_HERE.md) for the fastest project overview
 - [ROADMAP.md](ROADMAP.md) for current priorities
 - [GOOD_FIRST_TASKS.md](GOOD_FIRST_TASKS.md) for concrete first contributions
 - [ISSUE_BACKLOG.md](ISSUE_BACKLOG.md) for ready-to-post community issue drafts
@@ -84,6 +99,15 @@ npm install
 # Run the development server
 npm run dev
 \`\`\`
+
+## 📣 How to Help the Project Grow
+
+If you want to support the project without writing code yet:
+
+- open focused bug reports with reproduction steps;
+- propose narrowly-scoped improvements tied to the roadmap;
+- share the repository with React, Firebase, AI tooling, and circular-fashion communities;
+- point first-time contributors to [CONTRIBUTOR_START_HERE.md](CONTRIBUTOR_START_HERE.md).
 
 ---
 Copyright (c) 2026 Piedra Roja Group, Inc. and contributors.

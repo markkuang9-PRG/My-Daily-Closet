@@ -1,5 +1,11 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Contributor start guide
+    url: https://github.com/markkuang9-PRG/My-Daily-Closet/blob/main/CONTRIBUTOR_START_HERE.md
+    about: Start here if you want to understand the project quickly and pick a first contribution.
+  - name: Active roadmap
+    url: https://github.com/markkuang9-PRG/My-Daily-Closet/blob/main/ROADMAP.md
+    about: Check what the project is prioritizing before opening a feature request or large PR.
   - name: Security report
     url: https://github.com/markkuang9-PRG/My-Daily-Closet/security
     about: Use a private path for security issues when available. Do not post exploit details publicly.

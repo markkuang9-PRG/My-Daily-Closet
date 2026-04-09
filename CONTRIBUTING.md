@@ -6,6 +6,7 @@ We welcome contributions from everyone—whether you're a seasoned developer, a 
 
 Before contributing, please read:
 
+- [CONTRIBUTOR_START_HERE.md](CONTRIBUTOR_START_HERE.md)
 - [LICENSE](LICENSE)
 - [NOTICE](NOTICE)
 - [CLA.md](CLA.md)
@@ -36,6 +37,7 @@ We have a list of open issues. Look for issues labeled **`good first issue`** or
 - **Frontend:** React, Tailwind CSS, Framer Motion.
 - **Backend/AI:** Firebase, Google Gemini API.
 - **Suggested starting point:** choose something from [GOOD_FIRST_TASKS.md](GOOD_FIRST_TASKS.md) and keep the first PR narrow.
+- **Fastest overview:** read [CONTRIBUTOR_START_HERE.md](CONTRIBUTOR_START_HERE.md) before picking work.
 
 ## 🛠️ Local Development Setup
 
@@ -69,6 +71,17 @@ To get the project running on your local machine:
 4. Open a Pull Request (PR) against our \`main\` branch.
 5. Confirm the CLA checklist in the PR template.
 6. A maintainer will review your PR, suggest changes if needed, and merge it!
+
+## ✅ What Gets Reviewed Fastest
+
+The fastest-moving pull requests are usually:
+
+- one focused fix or improvement;
+- aligned with [ROADMAP.md](ROADMAP.md);
+- easy to test locally;
+- small enough to review without reopening product direction.
+
+If you want to propose a broader change, open an issue first and describe scope, user impact, and tradeoffs.
 
 ## ⚖️ License Note
 This repository is publicly distributed under **AGPL-3.0-only**.

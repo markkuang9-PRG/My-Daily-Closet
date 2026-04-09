@@ -6,82 +6,78 @@ These tasks are intentionally scoped so they can be completed without needing to
 
 ## Good first issues
 
-### 1. Split `src/App.tsx`
+### 1. Improve weather code mapping and fallback states
 
 Suggested outcome:
 
-- extract auth screen;
-- extract closet tab;
-- extract stylist tab;
-- extract market tab;
-- move shared types into a separate file.
+- standardize weather labels for more real API responses;
+- handle missing geolocation or failed weather fetches more gracefully;
+- avoid confusing empty text in the header and stylist flow.
 
 Why it matters:
 
-- lowers maintenance cost;
-- makes future contribution safer;
-- gives the project a real module structure.
+- weather quality directly affects outfit quality;
+- better fallbacks reduce trust-damaging edge cases.
 
-### 2. Fix environment variable consistency
+### 2. Let users edit generated resale copy before copying
 
 Suggested outcome:
 
-- standardize on `VITE_GEMINI_API_KEY`;
-- document env usage clearly in `.env.example` and `README.md`;
-- remove dead or inconsistent env references.
+- keep AI-generated title and description editable in the market flow;
+- preserve the existing one-click generation path;
+- do not introduce a full listing management system.
 
 Why it matters:
 
-- reduces setup friction for new contributors;
-- avoids broken local runs.
+- AI output is a draft, not final truth;
+- manual editing makes the resale flow more usable.
 
-### 3. Add upload validation
+### 3. Reduce the large production JavaScript bundle
 
 Suggested outcome:
 
-- reject unsupported file types;
-- reject extremely large files before processing;
-- show clear error messages;
-- keep the current flow simple.
+- identify obvious code-splitting opportunities;
+- keep the app behavior unchanged;
+- document the measured improvement in the PR.
 
 Why it matters:
 
-- prevents common user-facing errors;
-- improves perceived quality quickly.
+- smaller bundles improve first load on mobile;
+- it is one of the clearest current technical weaknesses.
 
-### 4. Add editable metadata after AI tagging
+### 4. Add upload success and failure toasts instead of `alert`
 
 Suggested outcome:
 
-- after import, allow category, color, style, and season to be edited;
+- replace blocking browser alerts in one focused workflow;
 - keep the UI lightweight;
-- do not redesign the whole application.
+- preserve clear user feedback for success and failure cases.
 
 Why it matters:
 
-- AI tagging will never be perfect;
-- manual correction is essential for trust.
+- alerts feel rough and slow the flow down;
+- a contained improvement here helps the app feel less like a demo.
 
-### 5. Add basic tests for core utility paths
+### 5. Add tests for outfit/result parsing edge cases
 
 Suggested outcome:
 
-- add tests for parsing / validation helpers once those helpers are extracted;
-- prioritize low-flake tests over broad coverage.
+- cover malformed AI JSON and fallback behavior;
+- keep tests deterministic;
+- focus on helper logic instead of UI snapshots.
 
 Why it matters:
 
-- makes future refactors less risky;
-- helps contributors move faster.
+- AI integrations fail at the seams first;
+- this increases confidence without expensive E2E work.
 
 ## Help wanted
 
 These are useful, but typically need a little more context:
 
-- improve weather code mapping and fallback behavior;
-- improve AI outfit prompt robustness;
+- improve AI outfit prompt robustness for specific occasions;
 - reduce the large production JS bundle;
-- improve accessibility of buttons, status text, and loading states;
+- improve accessibility of buttons, status text, dialogs, and loading states;
 - improve Firestore error recovery and retry messaging.
 
 ## Contribution style that helps most
