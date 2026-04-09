@@ -19,6 +19,7 @@ Before contributing, please read:
 - [ROADMAP.md](ROADMAP.md)
 - [GOOD_FIRST_TASKS.md](GOOD_FIRST_TASKS.md)
 - [ISSUE_BACKLOG.md](ISSUE_BACKLOG.md)
+- [COMMUNITY_LAUNCH_CHECKLIST.md](COMMUNITY_LAUNCH_CHECKLIST.md)
 - [MAINTAINERS.md](MAINTAINERS.md)
 
 ## 🚀 How Can You Contribute?

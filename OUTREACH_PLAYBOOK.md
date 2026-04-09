@@ -44,6 +44,7 @@ Before sharing the repository, make sure these are easy to find:
 - [CONTRIBUTOR_START_HERE.md](CONTRIBUTOR_START_HERE.md)
 - [GOOD_FIRST_TASKS.md](GOOD_FIRST_TASKS.md)
 - 3 to 5 live GitHub issues based on [ISSUE_BACKLOG.md](ISSUE_BACKLOG.md)
+- [COMMUNITY_LAUNCH_CHECKLIST.md](COMMUNITY_LAUNCH_CHECKLIST.md)
 
 If those are not ready, outside developers will bounce quickly.
 
@@ -65,6 +66,10 @@ Use labels such as:
 - `ai`
 - `performance`
 - `ux`
+
+Ready-to-paste issue bodies are stored in:
+
+- [community/issue-drafts](community/issue-drafts)
 
 ## Ready-to-post short outreach copy
 
