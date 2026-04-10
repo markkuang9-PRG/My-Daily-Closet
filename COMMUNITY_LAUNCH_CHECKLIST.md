@@ -34,6 +34,7 @@ Draft bodies are in:
 Execution sequencing is in:
 
 - [FIRST_WAVE_RECRUITMENT_PLAN.md](FIRST_WAVE_RECRUITMENT_PLAN.md)
+- [HOW_I_CAN_HELP_PUBLISH.md](HOW_I_CAN_HELP_PUBLISH.md)
 
 ## After posting publicly
 
