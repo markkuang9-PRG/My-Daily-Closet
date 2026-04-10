@@ -31,6 +31,10 @@ Draft bodies are in:
 - [upload-toasts.md](community/issue-drafts/upload-toasts.md)
 - [ai-parsing-tests.md](community/issue-drafts/ai-parsing-tests.md)
 
+Execution sequencing is in:
+
+- [FIRST_WAVE_RECRUITMENT_PLAN.md](FIRST_WAVE_RECRUITMENT_PLAN.md)
+
 ## After posting publicly
 
 - [ ] Reply to interested contributors within 24 hours

@@ -67,6 +67,8 @@ If you are evaluating whether to contribute, start here:
 - [GOOD_FIRST_TASKS.md](GOOD_FIRST_TASKS.md) for concrete first contributions
 - [ISSUE_BACKLOG.md](ISSUE_BACKLOG.md) for ready-to-post community issue drafts
 - [COMMUNITY_LAUNCH_CHECKLIST.md](COMMUNITY_LAUNCH_CHECKLIST.md) for the first public contributor push
+- [FIRST_WAVE_RECRUITMENT_PLAN.md](FIRST_WAVE_RECRUITMENT_PLAN.md) for recruiting before deeper product work
+- [COMMUNITY_REPLY_TEMPLATES.md](COMMUNITY_REPLY_TEMPLATES.md) for handling public replies and first contributor conversations
 - [CONTRIBUTING.md](CONTRIBUTING.md) for contribution process and legal terms
 
 The project is currently most receptive to focused improvements around MVP stabilization, workflow cleanup, Firebase reliability, prompt quality, and contributor-facing documentation.

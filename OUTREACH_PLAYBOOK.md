@@ -45,6 +45,8 @@ Before sharing the repository, make sure these are easy to find:
 - [GOOD_FIRST_TASKS.md](GOOD_FIRST_TASKS.md)
 - 3 to 5 live GitHub issues based on [ISSUE_BACKLOG.md](ISSUE_BACKLOG.md)
 - [COMMUNITY_LAUNCH_CHECKLIST.md](COMMUNITY_LAUNCH_CHECKLIST.md)
+- [FIRST_WAVE_RECRUITMENT_PLAN.md](FIRST_WAVE_RECRUITMENT_PLAN.md)
+- [COMMUNITY_REPLY_TEMPLATES.md](COMMUNITY_REPLY_TEMPLATES.md)
 
 If those are not ready, outside developers will bounce quickly.
 
@@ -144,6 +146,10 @@ Keep the reply short and specific:
 Example:
 
 > Thanks. The fastest way in is [CONTRIBUTOR_START_HERE.md](CONTRIBUTOR_START_HERE.md). A good first scoped task is the weather fallback issue. Goal is to improve mapping and empty/error states without changing providers.
+
+More reply templates are in:
+
+- [COMMUNITY_REPLY_TEMPLATES.md](COMMUNITY_REPLY_TEMPLATES.md)
 
 ## What success looks like
 
