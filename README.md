@@ -28,6 +28,19 @@ By treating personal clothing as manageable inventory, we aim to eliminate decis
    - Features a one-click generator for highly-converting sales copy, ready to be pasted into marketplaces like Poshmark, eBay, or Depop.
    - Turns idle wardrobe space back into liquid cash.
 
+## 📍 Project Status
+
+My Daily Closet is currently in the **open prototype to structured MVP** phase.
+
+That means the repository is public, the core flows already run, and the best outside contributions are now focused stabilization passes rather than broad rewrites.
+
+Current maintainer priorities:
+
+- strengthen AI parsing and fallback behavior;
+- smooth rough UX edges in upload, delete, and resale flows;
+- improve Firebase failure handling and user feedback;
+- keep bundle size, mobile behavior, and contributor onboarding under control.
+
 ## 🛠️ Tech Stack
 
 - **Frontend:** React 19, Tailwind CSS, Motion (Framer Motion)
@@ -50,11 +63,11 @@ We are actively looking for a small number of contributors who want to help turn
 
 The best fits right now are developers who can help with:
 
-- React cleanup and component polish
-- Firebase reliability and error handling
-- AI prompt quality and response validation
-- performance work such as bundle reduction and image delivery
+- AI response parsing tests and fallback validation
+- Firebase reliability and user-facing failure handling
+- non-blocking UI polish in delete, clipboard, and edit flows
 - accessibility and mobile UX fixes
+- narrow documentation improvements that reduce setup ambiguity
 
 If that sounds like your area, start with [CONTRIBUTOR_START_HERE.md](CONTRIBUTOR_START_HERE.md).
 
@@ -65,6 +78,8 @@ If you are evaluating whether to contribute, start here:
 - [CONTRIBUTOR_START_HERE.md](CONTRIBUTOR_START_HERE.md) for the fastest project overview
 - [ROADMAP.md](ROADMAP.md) for current priorities
 - [GOOD_FIRST_TASKS.md](GOOD_FIRST_TASKS.md) for concrete first contributions
+- [GitHub Discussions](https://github.com/markkuang9-PRG/My-Daily-Closet/discussions) for contributor coordination and project updates
+- [Open Issues](https://github.com/markkuang9-PRG/My-Daily-Closet/issues) for tasks ready to pick up
 - [ISSUE_BACKLOG.md](ISSUE_BACKLOG.md) for ready-to-post community issue drafts
 - [COMMUNITY_LAUNCH_CHECKLIST.md](COMMUNITY_LAUNCH_CHECKLIST.md) for the first public contributor push
 - [FIRST_WAVE_RECRUITMENT_PLAN.md](FIRST_WAVE_RECRUITMENT_PLAN.md) for recruiting before deeper product work
@@ -112,6 +127,7 @@ If you want to support the project without writing code yet:
 - open focused bug reports with reproduction steps;
 - propose narrowly-scoped improvements tied to the roadmap;
 - share the repository with React, Firebase, AI tooling, and circular-fashion communities;
+- join or reply in [GitHub Discussions](https://github.com/markkuang9-PRG/My-Daily-Closet/discussions) so other contributors can see active maintainer presence;
 - point first-time contributors to [CONTRIBUTOR_START_HERE.md](CONTRIBUTOR_START_HERE.md).
 
 ---

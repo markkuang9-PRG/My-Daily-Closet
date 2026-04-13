@@ -6,10 +6,10 @@ Current app can:
 - flag unworn items and generate resale copy
 
 Now looking for a few early contributors to help with:
-- React cleanup
+- AI parsing tests
 - Firebase reliability
-- prompt quality
-- performance + accessibility
+- delete / resale UX polish
+- accessibility
 
 Start here:
 https://github.com/markkuang9-PRG/My-Daily-Closet/blob/main/CONTRIBUTOR_START_HERE.md

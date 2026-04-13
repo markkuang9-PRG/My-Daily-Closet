@@ -50,6 +50,7 @@ npm run test
 ```
 
 5. If you want to code, open a small PR with a clear before/after explanation
+6. If you want maintainer context first, use [GitHub Discussions](https://github.com/markkuang9-PRG/My-Daily-Closet/discussions)
 
 ## What maintainers are likely to merge quickly
 

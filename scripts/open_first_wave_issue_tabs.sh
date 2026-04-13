@@ -32,31 +32,25 @@ PY
 }
 
 open_issue_tab \
-  "Improve weather code mapping and fallback states" \
-  "community/issue-drafts/weather-fallback.md"
-
-sleep 0.3
-
-open_issue_tab \
-  "Let users edit generated resale copy before copying" \
-  "community/issue-drafts/editable-resale-copy.md"
-
-sleep 0.3
-
-open_issue_tab \
-  "Reduce initial bundle size with targeted code splitting" \
-  "community/issue-drafts/bundle-size.md"
-
-sleep 0.3
-
-open_issue_tab \
-  "Add upload success and failure toasts instead of \`alert\`" \
-  "community/issue-drafts/upload-toasts.md"
-
-sleep 0.3
-
-open_issue_tab \
   "Add tests for outfit/result parsing edge cases" \
   "community/issue-drafts/ai-parsing-tests.md"
 
-echo "Opened 5 prefilled GitHub issue tabs."
+sleep 0.3
+
+open_issue_tab \
+  "Replace browser delete confirmation with an in-app confirmation step" \
+  "community/issue-drafts/delete-confirmation.md"
+
+sleep 0.3
+
+open_issue_tab \
+  "Handle clipboard-copy failures without losing the resale draft" \
+  "community/issue-drafts/clipboard-failure.md"
+
+sleep 0.3
+
+open_issue_tab \
+  "Show a user-facing toast when item deletion fails" \
+  "community/issue-drafts/delete-failure-toast.md"
+
+echo "Opened 4 prefilled GitHub issue tabs."

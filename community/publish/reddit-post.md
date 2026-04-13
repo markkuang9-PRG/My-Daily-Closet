@@ -11,11 +11,10 @@ The current prototype already supports:
 
 I am now trying to turn it into a cleaner MVP and am looking for a small number of contributors who are interested in:
 
-- React cleanup
-- Firebase reliability
-- prompt and response handling
+- AI parsing tests and response handling
+- Firebase reliability and error recovery
+- delete / resale UX polish
 - mobile UX and accessibility
-- performance improvements
 
 Contributor entry point:
 

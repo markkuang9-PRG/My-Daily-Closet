@@ -35,31 +35,43 @@ ensure_label "frontend" "1f6feb" "Frontend implementation work"
 ensure_label "firebase" "f39c12" "Firebase auth, Firestore, or related workflows"
 ensure_label "ai" "a371f7" "AI prompt, inference, or response handling work"
 ensure_label "performance" "fbca04" "Performance, bundle size, or load-time work"
+ensure_label "refactor" "c2e0c6" "Internal cleanup and code organization"
 ensure_label "ux" "d93f0b" "User experience and interaction polish"
 
-create_issue \
-  "Improve weather code mapping and fallback states" \
-  "good first issue,frontend,ux" \
-  "community/issue-drafts/weather-fallback.md"
+if gh issue list --state open --search "Add tests for outfit/result parsing edge cases in:title" --json title --jq 'length > 0' | grep -q true; then
+  echo "Skipping existing issue: Add tests for outfit/result parsing edge cases"
+else
+  create_issue \
+    "Add tests for outfit/result parsing edge cases" \
+    "help wanted,ai,refactor" \
+    "community/issue-drafts/ai-parsing-tests.md"
+fi
 
-create_issue \
-  "Let users edit generated resale copy before copying" \
-  "help wanted,frontend,ux" \
-  "community/issue-drafts/editable-resale-copy.md"
+if gh issue list --state open --search "Replace browser delete confirmation with an in-app confirmation step in:title" --json title --jq 'length > 0' | grep -q true; then
+  echo "Skipping existing issue: Replace browser delete confirmation with an in-app confirmation step"
+else
+  create_issue \
+    "Replace browser delete confirmation with an in-app confirmation step" \
+    "good first issue,frontend,ux" \
+    "community/issue-drafts/delete-confirmation.md"
+fi
 
-create_issue \
-  "Reduce initial bundle size with targeted code splitting" \
-  "help wanted,performance" \
-  "community/issue-drafts/bundle-size.md"
+if gh issue list --state open --search "Handle clipboard-copy failures without losing the resale draft in:title" --json title --jq 'length > 0' | grep -q true; then
+  echo "Skipping existing issue: Handle clipboard-copy failures without losing the resale draft"
+else
+  create_issue \
+    "Handle clipboard-copy failures without losing the resale draft" \
+    "good first issue,frontend,ux" \
+    "community/issue-drafts/clipboard-failure.md"
+fi
 
-create_issue \
-  "Add upload success and failure toasts instead of \`alert\`" \
-  "good first issue,frontend,ux" \
-  "community/issue-drafts/upload-toasts.md"
-
-create_issue \
-  "Add tests for outfit/result parsing edge cases" \
-  "help wanted,ai" \
-  "community/issue-drafts/ai-parsing-tests.md"
+if gh issue list --state open --search "Show a user-facing toast when item deletion fails in:title" --json title --jq 'length > 0' | grep -q true; then
+  echo "Skipping existing issue: Show a user-facing toast when item deletion fails"
+else
+  create_issue \
+    "Show a user-facing toast when item deletion fails" \
+    "help wanted,firebase,ux" \
+    "community/issue-drafts/delete-failure-toast.md"
+fi
 
 echo "First-wave labels and issues published."

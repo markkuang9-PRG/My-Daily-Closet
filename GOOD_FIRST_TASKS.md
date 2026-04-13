@@ -6,77 +6,76 @@ These tasks are intentionally scoped so they can be completed without needing to
 
 ## Good first issues
 
-### 1. Improve weather code mapping and fallback states
+### 1. Add tests for AI parsing edge cases
 
 Suggested outcome:
 
-- standardize weather labels for more real API responses;
-- handle missing geolocation or failed weather fetches more gracefully;
-- avoid confusing empty text in the header and stylist flow.
+- cover malformed AI JSON and fallback behavior in deterministic utility-level tests;
+- focus on outfit and resale parsing paths;
+- keep the tests low-flake and fast to run.
 
 Why it matters:
 
-- weather quality directly affects outfit quality;
-- better fallbacks reduce trust-damaging edge cases.
+- AI integrations fail first at parsing boundaries;
+- better coverage protects the most fragile current logic.
 
-### 2. Let users edit generated resale copy before copying
+### 2. Replace browser delete confirmation with an in-app confirmation step
 
 Suggested outcome:
 
-- keep AI-generated title and description editable in the market flow;
-- preserve the existing one-click generation path;
-- do not introduce a full listing management system.
+- remove the blocking `window.confirm` call from the delete path;
+- replace it with a lightweight in-app confirmation dialog, sheet, or equivalent pattern;
+- keep the flow mobile-friendly and easy to cancel.
 
 Why it matters:
 
-- AI output is a draft, not final truth;
-- manual editing makes the resale flow more usable.
+- browser confirms feel rough and inconsistent;
+- this is a visible polish win with low product risk.
 
-### 3. Reduce the large production JavaScript bundle
+### 3. Handle clipboard-copy failures in the resale flow
 
 Suggested outcome:
 
-- identify obvious code-splitting opportunities;
-- keep the app behavior unchanged;
-- document the measured improvement in the PR.
+- show a clear error if clipboard access fails;
+- do not delete or hide the item when copy fails;
+- preserve the fast happy path when clipboard access succeeds.
 
 Why it matters:
 
-- smaller bundles improve first load on mobile;
-- it is one of the clearest current technical weaknesses.
+- the current resale flow assumes clipboard success;
+- losing the draft or item state on failure would damage trust.
 
-### 4. Add upload success and failure toasts instead of `alert`
+### 4. Improve delete failure feedback for Firestore write errors
 
 Suggested outcome:
 
-- replace blocking browser alerts in one focused workflow;
-- keep the UI lightweight;
-- preserve clear user feedback for success and failure cases.
+- surface a user-facing toast when delete requests fail;
+- keep structured logging in place;
+- avoid changing unrelated CRUD behavior.
 
 Why it matters:
 
-- alerts feel rough and slow the flow down;
-- a contained improvement here helps the app feel less like a demo.
+- silent failures make the app feel unreliable;
+- this is a good entry point for contributors who want to improve Firebase UX without changing architecture.
 
-### 5. Add tests for outfit/result parsing edge cases
+### 5. Tighten occasion-aware outfit prompt guidance
 
 Suggested outcome:
 
-- cover malformed AI JSON and fallback behavior;
-- keep tests deterministic;
-- focus on helper logic instead of UI snapshots.
+- improve prompt instructions for common scenarios like office, travel, and dinner;
+- keep current model/provider choices intact;
+- avoid introducing a larger settings system in the first pass.
 
 Why it matters:
 
-- AI integrations fail at the seams first;
-- this increases confidence without expensive E2E work.
+- stylist quality is one of the product's clearest differentiators;
+- prompt improvements can move quality without a large UI rewrite.
 
 ## Help wanted
 
 These are useful, but typically need a little more context:
 
 - improve AI outfit prompt robustness for specific occasions;
-- reduce the large production JS bundle;
 - improve accessibility of buttons, status text, dialogs, and loading states;
 - improve Firestore error recovery and retry messaging.
 

@@ -22,97 +22,6 @@ Create these labels in GitHub before posting issues:
 
 ### Issue 1
 
-**Title:** Improve weather code mapping and fallback states
-
-**Labels:** `good first issue`, `frontend`, `ux`
-
-**Problem**
-
-The app uses Open-Meteo weather data, but the display and fallback behavior can still be more robust. If location access fails, if the weather API returns an unfamiliar code, or if the request takes too long, the UI should remain clear and calm.
-
-**Scope**
-
-- improve weather-code-to-label mapping;
-- improve fallback messaging when geolocation or weather fetches fail;
-- keep the current provider and general UI structure;
-- avoid adding account-level location settings in this issue.
-
-**Acceptance criteria**
-
-- weather labels are clearer and more consistent;
-- fallback states do not leave confusing empty text;
-- `npm run lint` passes;
-- `npm run build` passes.
-
-### Issue 2
-
-**Title:** Let users edit generated resale copy before copying
-
-**Labels:** `help wanted`, `frontend`, `ux`
-
-**Problem**
-
-The resale flow generates useful copy, but users cannot refine it before copying. For a marketplace workflow, the AI output should be an editable draft rather than locked final text.
-
-**Scope**
-
-- make generated title editable;
-- make generated description editable;
-- preserve the existing one-click generation flow;
-- do not introduce a full listing manager.
-
-**Acceptance criteria**
-
-- users can adjust generated resale copy before copying it;
-- current flow still works if users make no edits;
-- lint and build continue to pass.
-
-### Issue 3
-
-**Title:** Reduce initial bundle size with targeted code splitting
-
-**Labels:** `help wanted`, `performance`, `refactor`
-
-**Problem**
-
-The production build currently warns about a large JavaScript bundle. The project needs a focused performance pass, not a broad rewrite.
-
-**Scope**
-
-- identify obvious code-splitting opportunities;
-- keep user-visible behavior consistent;
-- document what changed and what measurable improvement was achieved.
-
-**Acceptance criteria**
-
-- `npm run build` still passes;
-- bundle warning is reduced or the biggest contributors are documented clearly in the PR;
-- no regression in main closet, stylist, or market flows.
-
-### Issue 4
-
-**Title:** Add upload success and failure toasts instead of `alert`
-
-**Labels:** `good first issue`, `frontend`, `ux`
-
-**Problem**
-
-The app still uses blocking browser `alert` dialogs in key paths such as uploads and AI actions. That makes the product feel rough and interrupts the user flow.
-
-**Scope**
-
-- replace `alert` in one focused workflow, starting with upload success and failure states;
-- keep the UI lightweight;
-- avoid a broad notification framework unless it is justified and contained.
-
-**Acceptance criteria**
-
-- users receive clear non-blocking feedback after upload attempts;
-- current upload behavior remains understandable;
-- lint and build pass.
-
-### Issue 5
-
 **Title:** Add tests for outfit/result parsing edge cases
 
 **Labels:** `help wanted`, `ai`, `refactor`
@@ -132,6 +41,94 @@ AI integrations are fragile around malformed JSON and unexpected model responses
 - tests cover malformed AI output or missing fields;
 - the coverage helps protect current fallback behavior;
 - `npm run test` passes.
+
+### Issue 2
+
+**Title:** Replace browser delete confirmation with an in-app confirmation step
+
+**Labels:** `good first issue`, `frontend`, `ux`
+
+**Problem**
+
+The delete flow still uses a blocking browser `window.confirm`. That feels rough, especially on mobile, and does not match the rest of the in-app UI.
+
+**Scope**
+
+- replace the blocking browser confirm in the delete path;
+- use a lightweight in-app confirmation pattern;
+- keep the implementation narrowly scoped to item deletion.
+
+**Acceptance criteria**
+
+- deleting an item requires an in-app confirmation step;
+- cancellation leaves the current item untouched;
+- lint and build continue to pass.
+
+### Issue 3
+
+**Title:** Handle clipboard-copy failures without losing the resale draft
+
+**Labels:** `good first issue`, `frontend`, `ux`
+
+**Problem**
+
+The resale flow assumes clipboard access succeeds. In some browsers or privacy settings, clipboard writes can fail, and the UI should recover cleanly without losing the generated draft or deleting the item.
+
+**Scope**
+
+- handle clipboard write errors explicitly;
+- keep the generated copy visible when copy fails;
+- avoid changing the broader market workflow.
+
+**Acceptance criteria**
+
+- users see a clear toast or inline error when copy fails;
+- the item is not deleted when clipboard access fails;
+- lint and build continue to pass.
+
+### Issue 4
+
+**Title:** Show a user-facing toast when item deletion fails
+
+**Labels:** `help wanted`, `firebase`, `ux`
+
+**Problem**
+
+The delete path logs Firestore failures, but it does not currently show the user what happened. Silent failures make the app feel unreliable.
+
+**Scope**
+
+- keep the existing delete behavior and logging structure;
+- add clear feedback when Firestore deletion fails;
+- avoid broad CRUD refactors in this issue.
+
+**Acceptance criteria**
+
+- users see a clear failure state when deletion does not succeed;
+- existing delete success behavior still works;
+- lint and build pass.
+
+### Issue 5
+
+**Title:** Improve occasion-aware outfit prompt guidance
+
+**Labels:** `help wanted`, `ai`
+
+**Problem**
+
+The stylist flow works, but the prompt is still fairly generic. It should better guide outfit generation for common real-life scenarios without forcing a much larger settings surface.
+
+**Scope**
+
+- refine the outfit prompt for common situations like office, travel, and dinner;
+- keep the current AI provider and general user flow;
+- avoid turning this into a broader personalization system.
+
+**Acceptance criteria**
+
+- prompt updates improve context guidance for occasion-style requests;
+- the current outfit generation flow remains intact;
+- tests or prompt-focused validation continue to pass where applicable.
 
 ## Wave 2: publish after the first responses
 
@@ -181,25 +178,25 @@ Firestore errors are logged, but the user-facing recovery guidance is still thin
 
 ### Issue 8
 
-**Title:** Add occasion-aware outfit prompts without changing the main flow
+**Title:** Reduce image payload pressure in the closet list
 
-**Labels:** `help wanted`, `ai`, `frontend`
+**Labels:** `help wanted`, `performance`, `frontend`
 
 **Problem**
 
-The AI stylist is useful, but it currently works from closet inventory and weather only. A small occasion input could make recommendations more relevant without changing the overall UX too much.
+Each clothing card currently renders the stored image payload directly. As the closet grows, the list should stay responsive and avoid heavier-than-needed image work on initial render.
 
 **Scope**
 
-- add a small optional occasion input such as date night, office, or travel;
-- keep the current recommendation flow intact;
-- avoid a large settings or profile system.
+- improve rendering strategy for closet item images;
+- preserve the current upload and editing flows;
+- avoid adding backend image infrastructure in this issue.
 
 **Acceptance criteria**
 
-- users can optionally supply an occasion before generating an outfit;
-- the styling flow still works when no occasion is provided;
-- scope remains narrow and MVP-friendly.
+- the closet list remains stable with more items loaded;
+- the chosen optimization is documented clearly in the PR;
+- build and core flows remain stable.
 
 ## Maintainer guidance
 
