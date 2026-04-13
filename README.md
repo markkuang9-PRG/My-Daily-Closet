@@ -70,6 +70,7 @@ If you are evaluating whether to contribute, start here:
 - [FIRST_WAVE_RECRUITMENT_PLAN.md](FIRST_WAVE_RECRUITMENT_PLAN.md) for recruiting before deeper product work
 - [COMMUNITY_REPLY_TEMPLATES.md](COMMUNITY_REPLY_TEMPLATES.md) for handling public replies and first contributor conversations
 - [HOW_I_CAN_HELP_PUBLISH.md](HOW_I_CAN_HELP_PUBLISH.md) for what Codex can automate and what still needs your account action
+- [community/publish](community/publish) for final copy-and-paste outreach posts
 - [CONTRIBUTING.md](CONTRIBUTING.md) for contribution process and legal terms
 
 The project is currently most receptive to focused improvements around MVP stabilization, workflow cleanup, Firebase reliability, prompt quality, and contributor-facing documentation.

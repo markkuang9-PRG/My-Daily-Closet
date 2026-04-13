@@ -1,0 +1,15 @@
+Building **My Daily Closet**, an open-source AI wardrobe app with React + Firebase + Gemini.
+
+Current app can:
+- digitize clothes from a photo
+- recommend outfits based on weather
+- flag unworn items and generate resale copy
+
+Now looking for a few early contributors to help with:
+- React cleanup
+- Firebase reliability
+- prompt quality
+- performance + accessibility
+
+Start here:
+https://github.com/markkuang9-PRG/My-Daily-Closet/blob/main/CONTRIBUTOR_START_HERE.md

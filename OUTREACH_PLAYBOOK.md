@@ -73,6 +73,10 @@ Ready-to-paste issue bodies are stored in:
 
 - [community/issue-drafts](community/issue-drafts)
 
+Ready-to-paste public posts are stored in:
+
+- [community/publish](community/publish)
+
 ## Ready-to-post short outreach copy
 
 ### X / Twitter version
