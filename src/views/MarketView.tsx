@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Loader2, Sparkles, Store } from 'lucide-react';
 import { motion } from 'motion/react';
 import type { ClothingItem, GeneratedCopy } from '../types';
@@ -21,6 +22,12 @@ export const MarketView = ({
   onClearSellingItem,
   onCopyGeneratedCopy,
 }: MarketViewProps) => {
+  const [draftCopy, setDraftCopy] = useState<GeneratedCopy | null>(null);
+
+  useEffect(() => {
+    setDraftCopy(generatedCopy);
+  }, [generatedCopy, sellingItem]);
+
   return (
     <motion.div
       key="market"
@@ -106,21 +113,49 @@ export const MarketView = ({
                   <Loader2 className="w-8 h-8 animate-spin mb-3 text-green-500" />
                   <p className="text-sm font-medium">AI is writing sales copy...</p>
                 </div>
-              ) : generatedCopy ? (
+              ) : draftCopy ? (
                 <div className="space-y-4">
                   <div>
-                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Listing Title</label>
-                    <h3 className="text-lg font-bold text-gray-900 mt-1">{generatedCopy.title}</h3>
+                    <div className="flex items-center justify-between gap-3">
+                      <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Listing Title</label>
+                      {generatedCopy ? (
+                        <button
+                          type="button"
+                          onClick={() => setDraftCopy(generatedCopy)}
+                          className="text-xs font-medium text-gray-500 hover:text-black"
+                        >
+                          Reset to AI draft
+                        </button>
+                      ) : null}
+                    </div>
+                    <input
+                      value={draftCopy.title}
+                      onChange={(event) =>
+                        setDraftCopy((current) =>
+                          current ? { ...current, title: event.target.value } : current,
+                        )
+                      }
+                      className="mt-1 w-full rounded-xl border border-gray-200 px-3 py-3 text-base font-semibold text-gray-900 outline-none transition-colors focus:border-black"
+                      placeholder="Listing title"
+                    />
                   </div>
                   <div>
                     <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Listing Description</label>
-                    <div className="bg-gray-50 p-4 rounded-xl mt-1 text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
-                      {generatedCopy.description}
-                    </div>
+                    <textarea
+                      value={draftCopy.description}
+                      onChange={(event) =>
+                        setDraftCopy((current) =>
+                          current ? { ...current, description: event.target.value } : current,
+                        )
+                      }
+                      rows={8}
+                      className="mt-1 w-full rounded-xl border border-gray-200 px-3 py-3 text-sm leading-relaxed text-gray-700 outline-none transition-colors focus:border-black"
+                      placeholder="Listing description"
+                    />
                   </div>
 
                   <button
-                    onClick={() => onCopyGeneratedCopy(sellingItem.id, generatedCopy)}
+                    onClick={() => onCopyGeneratedCopy(sellingItem.id, draftCopy)}
                     className="w-full bg-green-500 text-white py-3 rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-green-600 transition-colors mt-4"
                   >
                     <Store className="w-4 h-4" /> Copy & Go to Sell
