@@ -16,6 +16,12 @@ type UseClosetActionsArgs = {
   weather: string;
 };
 
+type DeleteItemOptions = {
+  failureMessage?: string;
+  skipConfirm?: boolean;
+  suppressFailureToast?: boolean;
+};
+
 const parseModelJson = (text: string | undefined) => {
   const cleanJsonStr = text?.replace(/```json/g, '').replace(/```/g, '').trim() || '{}';
   return JSON.parse(cleanJsonStr);
@@ -260,9 +266,9 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
     }
   };
 
-  const deleteItem = async (id: string) => {
-    if (!user) return;
-    if (!window.confirm('Are you sure you want to delete this item?')) return;
+  const deleteItem = async (id: string, options: DeleteItemOptions = {}) => {
+    if (!user) return false;
+    if (!options.skipConfirm && !window.confirm('Are you sure you want to delete this item?')) return false;
 
     try {
       await deleteDoc(doc(db, 'users', user.uid, 'clothes', id));
@@ -272,6 +278,7 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
       if (editingItem?.id === id) {
         setEditingItem(null);
       }
+      return true;
     } catch (error) {
       logAppError(error, {
         operation: 'delete_clothing_item',
@@ -281,16 +288,53 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
           itemId: id,
         },
       });
+      if (!options.suppressFailureToast) {
+        notify({
+          message: options.failureMessage ?? 'Failed to delete item, please try again.',
+          tone: 'error',
+        });
+      }
+      return false;
     }
   };
 
   const copyGeneratedCopy = async (itemId: string, copy: GeneratedCopy) => {
-    await navigator.clipboard.writeText(`${copy.title}\n\n${copy.description}`);
+    try {
+      await navigator.clipboard.writeText(`${copy.title}\n\n${copy.description}`);
+    } catch (error) {
+      logAppError(error, {
+        operation: 'copy_sales_copy',
+        path: currentPath,
+        userId: user?.uid ?? null,
+        extra: {
+          itemId,
+        },
+      });
+      notify({
+        message: 'Clipboard copy failed. Your draft is still here, so you can try again.',
+        tone: 'error',
+      });
+      return false;
+    }
+
+    const didDelete = await deleteItem(itemId, {
+      skipConfirm: true,
+      suppressFailureToast: true,
+    });
+
+    if (!didDelete) {
+      notify({
+        message: 'Copy succeeded, but the item could not be removed from your closet. Please try deleting it again.',
+        tone: 'error',
+      });
+      return false;
+    }
+
     notify({
       message: 'Copy added to clipboard. You can paste it into Poshmark or eBay.',
       tone: 'success',
     });
-    await deleteItem(itemId);
+    return true;
   };
 
   return {
