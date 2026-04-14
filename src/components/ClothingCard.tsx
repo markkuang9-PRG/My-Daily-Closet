@@ -6,7 +6,7 @@ type ClothingCardProps = {
   item: ClothingItem;
   variant?: 'closet' | 'compact';
   idleLabel?: string | null;
-  onDelete?: (id: string) => void;
+  onDelete?: (item: ClothingItem) => void;
   onEdit?: (item: ClothingItem) => void;
 };
 
@@ -49,7 +49,7 @@ export const ClothingCard = ({ item, variant = 'closet', idleLabel, onDelete, on
       ) : null}
       {onDelete ? (
         <button
-          onClick={() => onDelete(item.id)}
+          onClick={() => onDelete(item)}
           className="absolute top-2 right-2 w-6 h-6 bg-black/50 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10 text-xs"
         >
           ✕

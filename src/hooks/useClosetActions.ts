@@ -34,6 +34,8 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
   const [sellingItem, setSellingItem] = useState<ClothingItem | null>(null);
   const [generatedCopy, setGeneratedCopy] = useState<GeneratedCopy | null>(null);
   const [isGeneratingCopy, setIsGeneratingCopy] = useState(false);
+  const [deletingItem, setDeletingItem] = useState<ClothingItem | null>(null);
+  const [isDeletingItem, setIsDeletingItem] = useState(false);
   const [editingItem, setEditingItem] = useState<ClothingItem | null>(null);
   const [isSavingEdit, setIsSavingEdit] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -217,6 +219,16 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
     setGeneratedCopy(null);
   };
 
+  const startDeletingItem = (item: ClothingItem) => {
+    if (isDeletingItem) return;
+    setDeletingItem(item);
+  };
+
+  const cancelDeletingItem = () => {
+    if (isDeletingItem) return;
+    setDeletingItem(null);
+  };
+
   const startEditingItem = (item: ClothingItem) => {
     setEditingItem(item);
   };
@@ -268,7 +280,6 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
 
   const deleteItem = async (id: string, options: DeleteItemOptions = {}) => {
     if (!user) return false;
-    if (!options.skipConfirm && !window.confirm('Are you sure you want to delete this item?')) return false;
 
     try {
       await deleteDoc(doc(db, 'users', user.uid, 'clothes', id));
@@ -296,6 +307,22 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
       }
       return false;
     }
+  };
+
+  const confirmDeletingItem = async () => {
+    if (!deletingItem) return false;
+
+    setIsDeletingItem(true);
+    const didDelete = await deleteItem(deletingItem.id, {
+      skipConfirm: true,
+    });
+    setIsDeletingItem(false);
+
+    if (didDelete) {
+      setDeletingItem(null);
+    }
+
+    return didDelete;
   };
 
   const copyGeneratedCopy = async (itemId: string, copy: GeneratedCopy) => {
@@ -338,7 +365,10 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
   };
 
   return {
+    cancelDeletingItem,
     cancelEditingItem,
+    confirmDeletingItem,
+    deletingItem,
     deleteItem,
     editingItem,
     generateOutfit,
@@ -346,6 +376,7 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
     generatedCopy,
     handleFileUpload,
     fileInputRef,
+    isDeletingItem,
     isGeneratingCopy,
     isSavingEdit,
     isStyling,
@@ -356,6 +387,7 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
     copyGeneratedCopy,
     saveItemMetadata,
     sellingItem,
+    startDeletingItem,
     startEditingItem,
   };
 };

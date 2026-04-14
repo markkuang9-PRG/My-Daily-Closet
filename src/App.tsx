@@ -51,13 +51,16 @@ export default function App() {
   const weather = useWeather(user?.uid);
   const clothes = useClothes(user, isAuthReady);
   const {
+    cancelDeletingItem,
     cancelEditingItem,
     clearSellingItem,
     confirmOutfit,
+    confirmDeletingItem,
     copyGeneratedCopy,
-    deleteItem,
+    deletingItem,
     editingItem,
     fileInputRef,
+    isDeletingItem,
     generateOutfit,
     generateSalesCopy,
     generatedCopy,
@@ -69,6 +72,7 @@ export default function App() {
     outfitRecommendation,
     saveItemMetadata,
     sellingItem,
+    startDeletingItem,
     startEditingItem,
   } = useClosetActions({
     clothes,
@@ -139,14 +143,18 @@ export default function App() {
             {activeTab === 'closet' && (
               <ClosetView
                 clothes={clothes}
+                deletingItem={deletingItem}
                 editingItem={editingItem}
                 fileInputRef={fileInputRef}
+                isDeletingItem={isDeletingItem}
                 isSavingEdit={isSavingEdit}
+                onCancelDelete={cancelDeletingItem}
                 isUploading={isUploading}
                 onCancelEdit={cancelEditingItem}
+                onConfirmDelete={confirmDeletingItem}
                 onEditItem={startEditingItem}
                 onFileUpload={handleFileUpload}
-                onDeleteItem={deleteItem}
+                onDeleteItem={startDeletingItem}
                 onSaveEdit={saveItemMetadata}
               />
             )}

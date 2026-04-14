@@ -2,29 +2,38 @@ import type { ChangeEvent, RefObject } from 'react';
 import { Camera, Loader2, Shirt } from 'lucide-react';
 import { motion } from 'motion/react';
 import { ClothingCard } from '../components/ClothingCard';
+import { DeleteItemSheet } from '../components/DeleteItemSheet';
 import { EditItemSheet } from '../components/EditItemSheet';
 import type { ClothingItem, ClothingMetadataInput } from '../types';
 
 type ClosetViewProps = {
   clothes: ClothingItem[];
+  deletingItem: ClothingItem | null;
   editingItem: ClothingItem | null;
   fileInputRef: RefObject<HTMLInputElement | null>;
+  isDeletingItem: boolean;
   isSavingEdit: boolean;
+  onCancelDelete: () => void;
   isUploading: boolean;
   onCancelEdit: () => void;
+  onConfirmDelete: () => void;
   onEditItem: (item: ClothingItem) => void;
   onFileUpload: (event: ChangeEvent<HTMLInputElement>) => void;
-  onDeleteItem: (id: string) => void;
+  onDeleteItem: (item: ClothingItem) => void;
   onSaveEdit: (values: ClothingMetadataInput) => void;
 };
 
 export const ClosetView = ({
   clothes,
+  deletingItem,
   editingItem,
   fileInputRef,
+  isDeletingItem,
   isSavingEdit,
+  onCancelDelete,
   isUploading,
   onCancelEdit,
+  onConfirmDelete,
   onEditItem,
   onFileUpload,
   onDeleteItem,
@@ -84,6 +93,7 @@ export const ClosetView = ({
       </motion.div>
 
       <EditItemSheet item={editingItem} isSaving={isSavingEdit} onCancel={onCancelEdit} onSave={onSaveEdit} />
+      <DeleteItemSheet item={deletingItem} isDeleting={isDeletingItem} onCancel={onCancelDelete} onConfirm={onConfirmDelete} />
     </>
   );
 };
