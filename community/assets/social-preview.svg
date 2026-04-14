@@ -1,0 +1,48 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="640" rx="32" fill="#0F172A"/>
+  <rect x="48" y="48" width="1184" height="544" rx="28" fill="#111827"/>
+  <rect x="84" y="84" width="184" height="42" rx="21" fill="#134E4A"/>
+  <text x="176" y="111" fill="#CCFBF1" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">OPEN SOURCE</text>
+
+  <text x="84" y="212" fill="#F9FAFB" font-family="Arial, sans-serif" font-size="74" font-weight="800">My Daily Closet</text>
+  <text x="84" y="270" fill="#A7F3D0" font-family="Arial, sans-serif" font-size="28" font-weight="600">Digitize. Style. Resell.</text>
+
+  <text x="84" y="338" fill="#D1D5DB" font-family="Arial, sans-serif" font-size="30" font-weight="500">
+    AI wardrobe app built with
+  </text>
+  <text x="84" y="378" fill="#D1D5DB" font-family="Arial, sans-serif" font-size="30" font-weight="500">
+    React, Firebase, and Gemini.
+  </text>
+  <text x="84" y="426" fill="#9CA3AF" font-family="Arial, sans-serif" font-size="26" font-weight="400">
+    Turn closet photos into outfits and resale-ready listings.
+  </text>
+
+  <rect x="84" y="454" width="210" height="56" rx="16" fill="#111827" stroke="#374151" stroke-width="2"/>
+  <text x="189" y="489" fill="#E5E7EB" font-family="Arial, sans-serif" font-size="24" font-weight="600" text-anchor="middle">React + Vite</text>
+
+  <rect x="312" y="454" width="216" height="56" rx="16" fill="#111827" stroke="#374151" stroke-width="2"/>
+  <text x="420" y="489" fill="#E5E7EB" font-family="Arial, sans-serif" font-size="24" font-weight="600" text-anchor="middle">Firebase Auth</text>
+
+  <rect x="546" y="454" width="184" height="56" rx="16" fill="#111827" stroke="#374151" stroke-width="2"/>
+  <text x="638" y="489" fill="#E5E7EB" font-family="Arial, sans-serif" font-size="24" font-weight="600" text-anchor="middle">Gemini AI</text>
+
+  <rect x="820" y="116" width="336" height="408" rx="28" fill="#F9FAFB"/>
+  <rect x="844" y="142" width="288" height="160" rx="22" fill="#E5E7EB"/>
+  <rect x="868" y="168" width="112" height="108" rx="18" fill="#CBD5E1"/>
+  <rect x="996" y="168" width="112" height="108" rx="18" fill="#D1FAE5"/>
+  <rect x="868" y="324" width="240" height="18" rx="9" fill="#111827" fill-opacity="0.92"/>
+  <rect x="868" y="356" width="196" height="14" rx="7" fill="#6B7280"/>
+  <rect x="868" y="392" width="96" height="36" rx="18" fill="#10B981"/>
+  <text x="916" y="416" fill="#ECFDF5" font-family="Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">Style</text>
+  <rect x="972" y="392" width="136" height="36" rx="18" fill="#111827"/>
+  <text x="1040" y="416" fill="#F9FAFB" font-family="Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle">Sell idle items</text>
+
+  <circle cx="930" cy="224" r="34" fill="#94A3B8"/>
+  <path d="M905 252C911 230 921 213 930 213C939 213 949 230 955 252H905Z" fill="#64748B"/>
+  <path d="M1018 192H1088V252H1018V192Z" fill="#6EE7B7"/>
+  <path d="M1034 174C1034 161 1045 150 1058 150C1071 150 1082 161 1082 174V192H1034V174Z" fill="#34D399"/>
+
+  <text x="820" y="570" fill="#86EFAC" font-family="Arial, sans-serif" font-size="24" font-weight="700">
+    Public repo · issues ready
+  </text>
+</svg>
