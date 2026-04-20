@@ -69,8 +69,10 @@ export default function App() {
     isSavingEdit,
     isStyling,
     isUploading,
+    outfitOccasion,
     outfitRecommendation,
     saveItemMetadata,
+    setOutfitOccasion,
     sellingItem,
     startDeletingItem,
     startEditingItem,
@@ -164,9 +166,11 @@ export default function App() {
                 <StylistView
                   clothes={clothes}
                   isStyling={isStyling}
+                  occasion={outfitOccasion}
                   outfitRecommendation={outfitRecommendation}
                   weather={weather}
                   onGenerateOutfit={generateOutfit}
+                  onOccasionChange={setOutfitOccasion}
                   onConfirmOutfit={async () => {
                     const didConfirm = await confirmOutfit();
                     if (didConfirm) {

@@ -31,6 +31,7 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
   const [isUploading, setIsUploading] = useState(false);
   const [isStyling, setIsStyling] = useState(false);
   const [outfitRecommendation, setOutfitRecommendation] = useState<OutfitRecommendation | null>(null);
+  const [outfitOccasion, setOutfitOccasion] = useState('');
   const [sellingItem, setSellingItem] = useState<ClothingItem | null>(null);
   const [generatedCopy, setGeneratedCopy] = useState<GeneratedCopy | null>(null);
   const [isGeneratingCopy, setIsGeneratingCopy] = useState(false);
@@ -126,7 +127,7 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
       const aiClient = await getAiClient();
       const response = await aiClient.models.generateContent({
         model: 'gemini-3-flash-preview',
-        contents: buildOutfitPrompt(clothes, weather),
+        contents: buildOutfitPrompt(clothes, weather, outfitOccasion),
       });
 
       const result = parseModelJson(response.text) as OutfitRecommendation;
@@ -138,6 +139,7 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
         userId: user?.uid ?? null,
         extra: {
           clothesCount: clothes.length,
+          occasion: outfitOccasion || null,
           weather,
         },
       });
@@ -389,5 +391,7 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
     sellingItem,
     startDeletingItem,
     startEditingItem,
+    outfitOccasion,
+    setOutfitOccasion,
   };
 };

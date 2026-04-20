@@ -30,6 +30,13 @@ describe('prompt builders', () => {
     expect(prompt).toContain("'message'");
   });
 
+  it('builds outfit prompt with occasion guidance when provided', () => {
+    const prompt = buildOutfitPrompt([sampleItem], '12°C, Rainy', 'Office meeting');
+    expect(prompt).toContain('Occasion: Office meeting');
+    expect(prompt).toContain('appropriate for both the weather and this occasion');
+    expect(prompt).toContain('occasion "Office meeting"');
+  });
+
   it('builds sales copy prompt with item details', () => {
     const prompt = buildSalesCopyPrompt(sampleItem);
     expect(prompt).toContain('Category: Top');

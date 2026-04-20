@@ -6,18 +6,24 @@ import type { ClothingItem, OutfitRecommendation, WeatherState } from '../types'
 type StylistViewProps = {
   clothes: ClothingItem[];
   isStyling: boolean;
+  occasion: string;
   outfitRecommendation: OutfitRecommendation | null;
   weather: WeatherState;
   onGenerateOutfit: () => void;
+  onOccasionChange: (value: string) => void;
   onConfirmOutfit: () => void;
 };
+
+const occasionPresets = ['Office', 'Date night', 'Travel', 'Weekend'];
 
 export const StylistView = ({
   clothes,
   isStyling,
+  occasion,
   outfitRecommendation,
   weather,
   onGenerateOutfit,
+  onOccasionChange,
   onConfirmOutfit,
 }: StylistViewProps) => {
   const recommendedItems = outfitRecommendation
@@ -46,6 +52,44 @@ export const StylistView = ({
             <p className="mt-1 text-sm font-medium text-gray-800">{weather.summary}</p>
             <p className="mt-1 text-xs text-gray-500">{weather.detail}</p>
           </div>
+          <div className="w-full max-w-sm rounded-2xl bg-white px-4 py-4 text-left shadow-sm ring-1 ring-gray-100">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Optional occasion</p>
+              {occasion ? (
+                <button
+                  type="button"
+                  onClick={() => onOccasionChange('')}
+                  className="text-xs font-medium text-gray-500 hover:text-black"
+                >
+                  Clear
+                </button>
+              ) : null}
+            </div>
+            <input
+              value={occasion}
+              onChange={(event) => onOccasionChange(event.target.value)}
+              placeholder="Office meeting, dinner, travel day..."
+              className="mt-2 w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm outline-none transition-colors focus:border-black"
+            />
+            <div className="mt-3 flex flex-wrap gap-2">
+              {occasionPresets.map((preset) => {
+                const isActive = occasion === preset;
+
+                return (
+                  <button
+                    key={preset}
+                    type="button"
+                    onClick={() => onOccasionChange(isActive ? '' : preset)}
+                    className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                      isActive ? 'bg-black text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    {preset}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
           <button
             onClick={onGenerateOutfit}
             disabled={isStyling || clothes.length === 0}
@@ -67,6 +111,11 @@ export const StylistView = ({
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative mb-8 mt-4">
             <div className="absolute -top-4 -left-2 text-3xl">💬</div>
+            {occasion ? (
+              <div className="mb-3 inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+                Occasion: {occasion}
+              </div>
+            ) : null}
             <p className="text-gray-700 leading-relaxed font-medium">{outfitRecommendation.message}</p>
             <div className="flex gap-3 mt-5">
               <button
