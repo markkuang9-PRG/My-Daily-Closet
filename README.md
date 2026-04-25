@@ -5,6 +5,12 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
+<p align="center">
+  <img src="community/assets/readme-auth-screen.png" alt="My Daily Closet current app sign-in screen" width="360" />
+</p>
+
+<p align="center"><sub>Current product entry screen from the live app build.</sub></p>
+
 ## 🌟 The Vision
 
 The fundamental problem with modern wardrobes isn't a lack of clothes, but a lack of **inventory management** and **styling guidance**. Millions of dollars of clothing sit idle in closets worldwide, causing decision fatigue and massive retail return rates.
