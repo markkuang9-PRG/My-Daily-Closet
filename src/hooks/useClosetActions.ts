@@ -2,6 +2,11 @@ import { useRef, useState, type ChangeEvent } from 'react';
 import type { User } from 'firebase/auth';
 import { addDoc, collection, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import {
+  parseClothingAnalysisResult,
+  parseOutfitRecommendationResult,
+  parseSalesCopyResult,
+} from '../lib/aiResponse';
 import { getAiClient } from '../lib/gemini';
 import { logAppError } from '../lib/logger';
 import { buildClothingAnalysisPrompt, buildOutfitPrompt, buildSalesCopyPrompt } from '../lib/prompts';
@@ -20,11 +25,6 @@ type DeleteItemOptions = {
   failureMessage?: string;
   skipConfirm?: boolean;
   suppressFailureToast?: boolean;
-};
-
-const parseModelJson = (text: string | undefined) => {
-  const cleanJsonStr = text?.replace(/```json/g, '').replace(/```/g, '').trim() || '{}';
-  return JSON.parse(cleanJsonStr);
 };
 
 export const useClosetActions = ({ clothes, currentPath, notify, user, weather }: UseClosetActionsArgs) => {
@@ -64,14 +64,14 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
 
       let aiResult;
       try {
-        aiResult = parseModelJson(response.text);
+        aiResult = parseClothingAnalysisResult(response.text);
       } catch (error) {
         logAppError(error, {
           operation: 'parse_clothing_analysis',
           path: currentPath,
           userId: user.uid,
         });
-        aiResult = { category: 'Unknown', color: 'Unknown', style: 'Unknown', season: 'Unknown' };
+        aiResult = parseClothingAnalysisResult('{}');
       }
 
       await addDoc(collection(db, 'users', user.uid, 'clothes'), {
@@ -130,7 +130,7 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
         contents: buildOutfitPrompt(clothes, weather, outfitOccasion),
       });
 
-      const result = parseModelJson(response.text) as OutfitRecommendation;
+      const result = parseOutfitRecommendationResult(response.text);
       setOutfitRecommendation(result);
     } catch (error) {
       logAppError(error, {
@@ -195,7 +195,7 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
         contents: buildSalesCopyPrompt(item),
       });
 
-      const result = parseModelJson(response.text) as GeneratedCopy;
+      const result = parseSalesCopyResult(response.text);
       setGeneratedCopy(result);
     } catch (error) {
       logAppError(error, {
