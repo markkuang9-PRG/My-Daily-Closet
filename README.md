@@ -84,6 +84,7 @@ If you are evaluating whether to contribute, start here:
 - [CONTRIBUTOR_START_HERE.md](CONTRIBUTOR_START_HERE.md) for the fastest project overview
 - [ROADMAP.md](ROADMAP.md) for current priorities
 - [GOOD_FIRST_TASKS.md](GOOD_FIRST_TASKS.md) for concrete first contributions
+- [DEPLOYMENT.md](DEPLOYMENT.md) for the shortest private beta deployment path
 - [GitHub Discussions](https://github.com/markkuang9-PRG/My-Daily-Closet/discussions) for contributor coordination and project updates
 - [Open Issues](https://github.com/markkuang9-PRG/My-Daily-Closet/issues) for tasks ready to pick up
 - [ISSUE_BACKLOG.md](ISSUE_BACKLOG.md) for ready-to-post community issue drafts
@@ -125,6 +126,8 @@ npm install
 # Run the development server
 npm run dev
 \`\`\`
+
+For private beta deployment, follow [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## 📣 How to Help the Project Grow
 
