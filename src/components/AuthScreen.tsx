@@ -1,11 +1,12 @@
 import { Loader2, LogIn, Shirt } from 'lucide-react';
 
 type AuthScreenProps = {
+  isGeminiConfigured: boolean;
   isLoggingIn: boolean;
   onLogin: () => void;
 };
 
-export const AuthScreen = ({ isLoggingIn, onLogin }: AuthScreenProps) => {
+export const AuthScreen = ({ isGeminiConfigured, isLoggingIn, onLogin }: AuthScreenProps) => {
   return (
     <div className="min-h-screen bg-gray-50 flex justify-center font-sans text-gray-900">
       <div className="w-full max-w-md bg-white h-screen flex flex-col items-center justify-center p-8 shadow-2xl">
@@ -33,6 +34,11 @@ export const AuthScreen = ({ isLoggingIn, onLogin }: AuthScreenProps) => {
             </>
           )}
         </button>
+        {!isGeminiConfigured ? (
+          <div className="mt-4 w-full rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            AI features are disabled until <code>VITE_GEMINI_API_KEY</code> is configured in the deployed environment.
+          </div>
+        ) : null}
       </div>
     </div>
   );

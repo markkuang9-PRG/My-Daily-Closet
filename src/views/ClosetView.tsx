@@ -11,6 +11,7 @@ type ClosetViewProps = {
   deletingItem: ClothingItem | null;
   editingItem: ClothingItem | null;
   fileInputRef: RefObject<HTMLInputElement | null>;
+  isGeminiConfigured: boolean;
   isDeletingItem: boolean;
   isSavingEdit: boolean;
   onCancelDelete: () => void;
@@ -28,6 +29,7 @@ export const ClosetView = ({
   deletingItem,
   editingItem,
   fileInputRef,
+  isGeminiConfigured,
   isDeletingItem,
   isSavingEdit,
   onCancelDelete,
@@ -50,7 +52,7 @@ export const ClosetView = ({
       >
         <button
           onClick={() => fileInputRef.current?.click()}
-          disabled={isUploading}
+          disabled={isUploading || !isGeminiConfigured}
           className="w-full bg-black text-white rounded-2xl p-4 flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 shadow-sm"
         >
           {isUploading ? (
@@ -65,6 +67,11 @@ export const ClosetView = ({
             </>
           )}
         </button>
+        {!isGeminiConfigured ? (
+          <p className="text-sm text-amber-700">
+            Configure <code>VITE_GEMINI_API_KEY</code> before testing AI clothing analysis.
+          </p>
+        ) : null}
         <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={onFileUpload} />
 
         {clothes.length === 0 ? (

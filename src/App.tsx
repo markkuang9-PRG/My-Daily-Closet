@@ -11,6 +11,7 @@ import { useClosetActions } from './hooks/useClosetActions';
 import { useClothes } from './hooks/useClothes';
 import { useToast } from './hooks/useToast';
 import { useWeather } from './hooks/useWeather';
+import { isGeminiConfigured } from './lib/gemini';
 import { logAppError } from './lib/logger';
 import type { AppTab } from './types';
 import { ClosetView } from './views/ClosetView';
@@ -118,7 +119,7 @@ export default function App() {
     return (
       <div className="relative min-h-screen bg-gray-50">
         <ToastStack toasts={toasts} onDismiss={dismissToast} />
-        <AuthScreen isLoggingIn={isLoggingIn} onLogin={handleLogin} />
+        <AuthScreen isGeminiConfigured={isGeminiConfigured} isLoggingIn={isLoggingIn} onLogin={handleLogin} />
       </div>
     );
   }
@@ -135,6 +136,7 @@ export default function App() {
         <AppHeader
           activeTab={activeTab}
           clothesCount={clothes.length}
+          isGeminiConfigured={isGeminiConfigured}
           idleClothesCount={idleClothes.length}
           weather={weather}
           onLogout={() => signOut(auth)}
@@ -148,6 +150,7 @@ export default function App() {
                 deletingItem={deletingItem}
                 editingItem={editingItem}
                 fileInputRef={fileInputRef}
+                isGeminiConfigured={isGeminiConfigured}
                 isDeletingItem={isDeletingItem}
                 isSavingEdit={isSavingEdit}
                 onCancelDelete={cancelDeletingItem}
@@ -165,6 +168,7 @@ export default function App() {
               <Suspense fallback={<TabFallback />}>
                 <StylistView
                   clothes={clothes}
+                  isGeminiConfigured={isGeminiConfigured}
                   isStyling={isStyling}
                   occasion={outfitOccasion}
                   outfitRecommendation={outfitRecommendation}
@@ -185,6 +189,7 @@ export default function App() {
               <Suspense fallback={<TabFallback />}>
                 <MarketView
                   idleClothes={idleClothes}
+                  isGeminiConfigured={isGeminiConfigured}
                   sellingItem={sellingItem}
                   generatedCopy={generatedCopy}
                   isGeneratingCopy={isGeneratingCopy}

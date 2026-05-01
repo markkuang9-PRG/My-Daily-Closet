@@ -19,6 +19,11 @@ This is appropriate for:
 
 This is **not** the final public-launch architecture. The current AI calls run in the browser, so the Gemini key must be restricted carefully and should eventually move behind a server-side boundary before broader public rollout.
 
+Also note:
+
+- the older no-auth claimable deployment path is no longer available;
+- deployment should now go through the Vercel CLI or the Vercel dashboard import flow.
+
 ## Current deployment status
 
 As of May 1, 2026, the repository already has:
@@ -88,6 +93,18 @@ Then:
 1. link the repository to a Vercel project;
 2. add `VITE_GEMINI_API_KEY` in project settings or with `vercel env add`;
 3. run a fresh deploy.
+
+If the CLI is not logged in yet:
+
+```bash
+vercel login
+```
+
+Or use a token:
+
+```bash
+vercel --token <YOUR_VERCEL_TOKEN>
+```
 
 ## Private beta smoke test checklist
 

@@ -2,6 +2,7 @@ import type { GoogleGenAI } from '@google/genai';
 
 const geminiApiKey = import.meta.env.VITE_GEMINI_API_KEY;
 let aiClientPromise: Promise<GoogleGenAI> | null = null;
+export const isGeminiConfigured = Boolean(geminiApiKey);
 
 export const getAiClient = async () => {
   if (!geminiApiKey) {

@@ -5,6 +5,7 @@ import type { ClothingItem, GeneratedCopy } from '../types';
 
 type MarketViewProps = {
   idleClothes: ClothingItem[];
+  isGeminiConfigured: boolean;
   sellingItem: ClothingItem | null;
   generatedCopy: GeneratedCopy | null;
   isGeneratingCopy: boolean;
@@ -15,6 +16,7 @@ type MarketViewProps = {
 
 export const MarketView = ({
   idleClothes,
+  isGeminiConfigured,
   sellingItem,
   generatedCopy,
   isGeneratingCopy,
@@ -81,7 +83,8 @@ export const MarketView = ({
                     </p>
                     <button
                       onClick={() => onGenerateSalesCopy(item)}
-                      className="mt-3 text-xs font-medium bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors"
+                      disabled={!isGeminiConfigured}
+                      className="mt-3 text-xs font-medium bg-black text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors disabled:bg-gray-300"
                     >
                       Sell Now
                     </button>
@@ -108,6 +111,11 @@ export const MarketView = ({
             />
 
             <div className="p-5">
+              {!isGeminiConfigured ? (
+                <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                  Configure <code>VITE_GEMINI_API_KEY</code> before testing AI resale copy generation.
+                </div>
+              ) : null}
               {isGeneratingCopy ? (
                 <div className="flex flex-col items-center justify-center py-10 text-gray-500">
                   <Loader2 className="w-8 h-8 animate-spin mb-3 text-green-500" />

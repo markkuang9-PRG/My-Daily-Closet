@@ -5,6 +5,7 @@ import type { ClothingItem, OutfitRecommendation, WeatherState } from '../types'
 
 type StylistViewProps = {
   clothes: ClothingItem[];
+  isGeminiConfigured: boolean;
   isStyling: boolean;
   occasion: string;
   outfitRecommendation: OutfitRecommendation | null;
@@ -18,6 +19,7 @@ const occasionPresets = ['Office', 'Date night', 'Travel', 'Weekend'];
 
 export const StylistView = ({
   clothes,
+  isGeminiConfigured,
   isStyling,
   occasion,
   outfitRecommendation,
@@ -92,7 +94,7 @@ export const StylistView = ({
           </div>
           <button
             onClick={onGenerateOutfit}
-            disabled={isStyling || clothes.length === 0}
+            disabled={isStyling || clothes.length === 0 || !isGeminiConfigured}
             className="bg-black text-white px-6 py-3 rounded-full font-medium flex items-center gap-2 hover:bg-gray-800 disabled:bg-gray-300 transition-colors mt-6"
           >
             {isStyling ? (
@@ -105,6 +107,9 @@ export const StylistView = ({
               </>
             )}
           </button>
+          {!isGeminiConfigured ? (
+            <p className="text-xs text-amber-700 mt-3">Set the Gemini environment variable before testing AI outfit recommendations.</p>
+          ) : null}
           {clothes.length === 0 ? <p className="text-xs text-red-400 mt-3">Please add items to your closet first</p> : null}
         </div>
       ) : (
@@ -126,7 +131,7 @@ export const StylistView = ({
               </button>
               <button
                 onClick={onGenerateOutfit}
-                disabled={isStyling}
+                disabled={isStyling || !isGeminiConfigured}
                 className="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200"
               >
                 Try Another
