@@ -50,12 +50,12 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
     try {
       validateUpload(file);
 
-      const base64String = await compressImage(file);
-      if (base64String.length > 1_000_000) {
+      const imageUrl = await compressImage(file);
+      if (imageUrl.length > 1_000_000) {
         throw new Error('Compressed image is still too large. Please use a smaller image.');
       }
 
-      const base64Data = base64String.split(',')[1];
+      const base64Data = imageUrl.split(',')[1];
       const aiClient = await getAiClient();
       const response = await aiClient.models.generateContent({
         model: 'gemini-3-flash-preview',
@@ -75,7 +75,7 @@ export const useClosetActions = ({ clothes, currentPath, notify, user, weather }
       }
 
       await addDoc(collection(db, 'users', user.uid, 'clothes'), {
-        imageUrl: base64String,
+        imageUrl,
         category: aiResult.category || 'Unknown',
         color: aiResult.color || 'Unknown',
         style: aiResult.style || 'Unknown',
