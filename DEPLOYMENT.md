@@ -26,13 +26,17 @@ Also note:
 
 ## Current deployment status
 
-As of May 1, 2026, the repository already has:
+As of May 3, 2026, the repository already has:
 
 - passing type checks;
 - passing unit tests;
 - passing production build;
 - Firebase auth and Firestore client wiring;
 - a Vercel-ready Vite build configuration.
+- a Vercel project named `my-daily-closet`;
+- a production deployment at https://my-daily-closet.vercel.app.
+
+The current Vercel deployment does **not** yet have `VITE_GEMINI_API_KEY` configured. Until that environment variable is set and redeployed, AI actions remain disabled with in-app configuration notices.
 
 ## Required private beta setup
 
@@ -57,6 +61,7 @@ VITE_GEMINI_API_KEY=your_key_here
 For private beta, restrict the key to:
 
 - `localhost`
+- `my-daily-closet.vercel.app`
 - your Vercel preview domain
 - your production domain
 
